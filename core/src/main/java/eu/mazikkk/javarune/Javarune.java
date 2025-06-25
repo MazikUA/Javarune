@@ -1,42 +1,69 @@
 package eu.mazikkk.javarune;
 
 import com.badlogic.gdx.ApplicationListener;
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.utils.ScreenUtils;
+import com.badlogic.gdx.utils.viewport.FitViewport;
 
 /**
  * {@link com.badlogic.gdx.ApplicationListener} implementation shared by all platforms.
  */
 public class Javarune implements ApplicationListener {
+    private Texture kris;
+    private SpriteBatch spriteBatch;
+    private FitViewport viewport;
+    private ShapeRenderer shapeRenderer;
+
     @Override
     public void create() {
-        // Prepare your application here.
+        kris = new Texture("kris.png");
+        spriteBatch = new SpriteBatch();
+        viewport = new FitViewport(320, 240);
+        shapeRenderer = new ShapeRenderer();
     }
 
     @Override
     public void resize(int width, int height) {
-        // If the window is minimized on a desktop (LWJGL3) platform, width and height are 0, which causes problems.
-        // In that case, we don't resize anything, and wait for the window to be a normal size before updating.
-        if (width <= 0 || height <= 0) return;
-
-        // Resize your application here. The parameters represent the new window size.
+        viewport.update(width, height, true);
     }
 
     @Override
     public void render() {
-        // Draw your application here.
+        ScreenUtils.clear(Color.BLACK);
+
+        viewport.apply();
+
+        shapeRenderer.setProjectionMatrix(viewport.getCamera().combined);
+        shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+        shapeRenderer.setColor(Color.WHITE);
+        shapeRenderer.rect(0, 0, viewport.getWorldWidth(), viewport.getWorldHeight());
+        shapeRenderer.end();
+
+        spriteBatch.setProjectionMatrix(viewport.getCamera().combined);
+        spriteBatch.begin();
+
+        spriteBatch.draw(kris, 0, 0);
+
+        spriteBatch.end();
     }
 
     @Override
     public void pause() {
-        // Invoked when your application is paused.
+
     }
 
     @Override
     public void resume() {
-        // Invoked when your application is resumed after pause.
+
     }
 
     @Override
     public void dispose() {
-        // Destroy application's resources here.
+        kris.dispose();
+        spriteBatch.dispose();
+        shapeRenderer.dispose();
     }
 }
