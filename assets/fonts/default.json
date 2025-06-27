@@ -1,0 +1,23 @@
+{
+    "providers": [
+        {
+            "type": "bitmap",
+            "file": "default/ascii.png",
+            "glyphs": [
+                " !\"#$%&'()*+,-./",
+                "0123456789:;<=>?",
+                "@ABCDEFGHIJKLMNO",
+                "PQRSTUVWXYZ[\\]^_",
+                "`abcdefghijklmno",
+                "pqrstuvwxyz{|}`\u0000"
+            ]
+        },
+        {
+            "type": "space",
+            "advances": {
+                "\u200c": 0,
+                " ": 4
+            }
+        }
+    ]
+}
