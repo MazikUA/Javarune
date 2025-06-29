@@ -58,8 +58,8 @@ public interface Codec<T> {
         );
     }
 
-    default FieldCodec<T> fieldOf(String name) {
-        return new FieldCodec<>(name, this);
+    default PropertyCodec<T> propertyOf(String property) {
+        return new PropertyCodec<>(property, this);
     }
 
     default <O> Codec<O> map(Function<T, O> decoder, Function<O, T> encoder) {

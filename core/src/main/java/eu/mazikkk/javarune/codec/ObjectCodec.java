@@ -24,7 +24,7 @@ public interface ObjectCodec<T> {
 
     void encode(T value, JsonObject object);
 
-    default Codec<T> asCodec() {
+    default Codec<T> toCodec() {
         return Codec.of(
             json -> this.decode(json.getAsJsonObject()),
             value -> {

@@ -12,13 +12,13 @@ public class Codecs {
     public static final Codec<Integer> INT = Codec.of(JsonElement::getAsInt, JsonPrimitive::new);
     public static final Codec<String> STRING = Codec.of(JsonElement::getAsString, JsonPrimitive::new);
 
-    public static <V> Codec<Map<String, V>> map(Codec<V> valueCodec) {
+    public static <K, V> Codec<Map<K, V>> map(Codec<K> keyCodec, Codec<V> valueCodec) {
         return Codec.of(
             json -> {
-                Map<String, V> map = new HashMap<>();
+                Map<K, V> map = new HashMap<>();
 
                 for (Map.Entry<String, JsonElement> entry : json.getAsJsonObject().asMap().entrySet()) {
-                    map.put(entry.getKey(), valueCodec.decode(entry.getValue()));
+                    map.put(keyCodec.decode(new JsonPrimitive(entry.getKey())), valueCodec.decode(entry.getValue()));
                 }
 
                 return map;
@@ -26,8 +26,8 @@ public class Codecs {
             map -> {
                 JsonObject object = new JsonObject();
 
-                for (Map.Entry<String, V> entry : map.entrySet()) {
-                    object.add(entry.getKey(), valueCodec.encode(entry.getValue()));
+                for (Map.Entry<K, V> entry : map.entrySet()) {
+                    object.add(keyCodec.encode(entry.getKey()).getAsString(), valueCodec.encode(entry.getValue()));
                 }
 
                 return object;

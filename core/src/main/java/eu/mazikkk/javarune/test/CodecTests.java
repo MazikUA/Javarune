@@ -1,6 +1,5 @@
 package eu.mazikkk.javarune.test;
 
-import com.google.gson.Gson;
 import com.google.gson.JsonParser;
 import eu.mazikkk.javarune.codec.Codec;
 import eu.mazikkk.javarune.codec.Codecs;
@@ -10,15 +9,13 @@ import java.util.Optional;
 
 public class CodecTests {
     public static void run() {
-        Gson gson = new Gson();
-
         String json = """
             {
-                "field1": 1,
-                "field3": {
-                    "field1": 1,
-                    "field2": 2,
-                    "field3": 3
+                "property1": 1,
+                "property3": {
+                    "property1": 1,
+                    "property2": 2,
+                    "property3": 3
                 }
             }
             """;
@@ -28,21 +25,21 @@ public class CodecTests {
         System.out.println(TestRecord2.CODEC.encode(result).toString());
     }
 
-    public record TestRecord1(int field1, int field2, int field3) {
+    public record TestRecord1(int property1, int property2, int property3) {
         public static final Codec<TestRecord1> CODEC = RecordCodec.create(
-            Codecs.INT.fieldOf("field1").getter(TestRecord1::field1),
-            Codecs.INT.fieldOf("field2").getter(TestRecord1::field2),
-            Codecs.INT.fieldOf("field3").getter(TestRecord1::field3),
+            Codecs.INT.propertyOf("property1").getter(TestRecord1::property1),
+            Codecs.INT.propertyOf("property2").getter(TestRecord1::property2),
+            Codecs.INT.propertyOf("property3").getter(TestRecord1::property3),
             TestRecord1::new
-        ).asCodec();
+        ).toCodec();
     }
 
-    public record TestRecord2(int field1, Optional<String> field2, TestRecord1 field3) {
+    public record TestRecord2(int property1, Optional<String> property2, TestRecord1 property3) {
         public static final Codec<TestRecord2> CODEC = RecordCodec.create(
-            Codecs.INT.fieldOf("field1").getter(TestRecord2::field1),
-            Codecs.STRING.optional().fieldOf("field2").getter(TestRecord2::field2),
-            TestRecord1.CODEC.fieldOf("field3").getter(TestRecord2::field3),
+            Codecs.INT.propertyOf("property1").getter(TestRecord2::property1),
+            Codecs.STRING.optional().propertyOf("property2").getter(TestRecord2::property2),
+            TestRecord1.CODEC.propertyOf("property3").getter(TestRecord2::property3),
             TestRecord2::new
-        ).asCodec();
+        ).toCodec();
     }
 }
