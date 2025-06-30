@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import eu.mazikkk.javarune.test.CodecTests;
+import eu.mazikkk.javarune.test.DispatchTests;
 
 public class Javarune extends Game {
     private FitViewport viewport;
@@ -12,6 +13,7 @@ public class Javarune extends Game {
     @Override
     public void create() {
         CodecTests.run();
+        DispatchTests.run();
 
         viewport = new FitViewport(640, 480);
     }

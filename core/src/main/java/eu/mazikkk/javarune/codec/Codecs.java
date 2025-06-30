@@ -10,6 +10,7 @@ import java.util.Map;
 public class Codecs {
     public static final Codec<Boolean> BOOLEAN = Codec.of(JsonElement::getAsBoolean, JsonPrimitive::new);
     public static final Codec<Integer> INT = Codec.of(JsonElement::getAsInt, JsonPrimitive::new);
+    public static final Codec<Float> FLOAT = Codec.of(JsonElement::getAsFloat, JsonPrimitive::new);
     public static final Codec<String> STRING = Codec.of(JsonElement::getAsString, JsonPrimitive::new);
 
     public static <K, V> Codec<Map<K, V>> map(Codec<K> keyCodec, Codec<V> valueCodec) {

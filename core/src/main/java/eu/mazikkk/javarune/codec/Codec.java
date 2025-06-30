@@ -35,6 +35,13 @@ public interface Codec<T> {
         );
     }
 
+    default Codec<T> optional(T defaultValue) {
+        return of(
+            json -> json == null || json.isJsonNull() ? defaultValue : this.decode(json),
+            this::encode
+        );
+    }
+
     default Codec<List<T>> list() {
         return of(
             json -> {
@@ -62,10 +69,18 @@ public interface Codec<T> {
         return new PropertyCodec<>(property, this);
     }
 
-    default <O> Codec<O> map(Function<T, O> decoder, Function<O, T> encoder) {
+    default <U> Codec<U> map(Function<T, U> decoder, Function<U, T> encoder) {
         return of(
             json -> decoder.apply(this.decode(json)),
             value -> this.encode(encoder.apply(value))
         );
+    }
+
+    default <U> ObjectCodec<U> dispatchObject(String key, Function<U, T> type, Function<T, ObjectCodec<? extends U>> codecGetter) {
+        return new DispatchCodec<>(key, this, type, codecGetter);
+    }
+
+    default <U> Codec<U> dispatch(String key, Function<U, T> type, Function<T, ObjectCodec<? extends U>> codecGetter) {
+        return dispatchObject(key, type, codecGetter).toCodec();
     }
 }
