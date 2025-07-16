@@ -1,11 +1,8 @@
-[compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
-eclipse.project.name = appName + '-core'
-
 dependencies {
-  api "com.badlogicgames.gdx:gdx:$gdxVersion"
-  implementation "com.google.code.gson:gson:$gsonVersion"
+    api "com.badlogicgames.gdx:gdx:$gdxVersion"
+    implementation "com.google.code.gson:gson:$gsonVersion"
+}
 
-  if (enableGraalNative == 'true') {
-    implementation "io.github.berstanio:gdx-svmhelper-annotations:$graalHelperVersion"
-  }
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = "UTF-8"
 }
