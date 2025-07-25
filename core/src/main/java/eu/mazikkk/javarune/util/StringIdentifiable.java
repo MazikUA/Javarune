@@ -1,4 +1,4 @@
-package eu.mazikkk.javarune;
+package eu.mazikkk.javarune.util;
 
 import eu.mazikkk.javarune.codec.Codec;
 import eu.mazikkk.javarune.codec.Codecs;

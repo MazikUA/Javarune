@@ -2,11 +2,11 @@ package eu.mazikkk.javarune.test;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import eu.mazikkk.javarune.StringIdentifiable;
 import eu.mazikkk.javarune.codec.Codec;
 import eu.mazikkk.javarune.codec.Codecs;
 import eu.mazikkk.javarune.codec.ObjectCodec;
 import eu.mazikkk.javarune.codec.RecordCodec;
+import eu.mazikkk.javarune.util.StringIdentifiable;
 
 import java.util.ArrayList;
 import java.util.List;

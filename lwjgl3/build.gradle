@@ -21,8 +21,6 @@ java {
 }
 
 run {
-    workingDir = rootProject.file("assets").path
-
     if (System.properties["os.name"].toString().toLowerCase().contains("mac")) {
         jvmArgs += "-XstartOnFirstThread"
     }
@@ -36,10 +34,6 @@ jar {
 
     from {
         configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
-    }
-
-    from(rootProject.file("assets")) {
-        into("assets")
     }
 
     exclude("META-INF/INDEX.LIST", "META-INF/*.SF", "META-INF/*.DSA", "META-INF/*.RSA")
