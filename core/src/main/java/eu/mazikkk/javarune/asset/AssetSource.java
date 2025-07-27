@@ -4,5 +4,5 @@ import java.io.InputStream;
 import java.util.Optional;
 
 public interface AssetSource {
-    Optional<InputStream> getAsset(AssetPath path);
+    Optional<InputStream> getAsset(String path);
 }

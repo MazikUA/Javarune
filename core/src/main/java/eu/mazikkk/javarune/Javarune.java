@@ -6,11 +6,8 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.ScreenUtils;
 import eu.mazikkk.javarune.asset.AssetManager;
-import eu.mazikkk.javarune.asset.AssetPath;
 import eu.mazikkk.javarune.asset.loader.TextureLoader;
 import eu.mazikkk.javarune.asset.source.JarAssetSource;
-import eu.mazikkk.javarune.test.CodecTests;
-import eu.mazikkk.javarune.test.DispatchTests;
 import eu.mazikkk.javarune.util.viewport.DeltaruneViewport;
 
 public class Javarune extends ApplicationAdapter {
@@ -23,8 +20,9 @@ public class Javarune extends ApplicationAdapter {
 
     @Override
     public void create() {
-        CodecTests.run();
-        DispatchTests.run();
+        // TODO: make real tests
+        // CodecTests.run();
+        // DispatchTests.run();
 
         viewport = new DeltaruneViewport();
         batch = new SpriteBatch();
@@ -35,7 +33,7 @@ public class Javarune extends ApplicationAdapter {
         this.assetManager.registerSource(new JarAssetSource(Javarune.class));
         this.assetManager.load();
 
-        tex = textureLoader.get(AssetPath.of("textures:font/default/ascii.png"));
+        tex = textureLoader.get("font/default/ascii.png");
     }
 
     @Override

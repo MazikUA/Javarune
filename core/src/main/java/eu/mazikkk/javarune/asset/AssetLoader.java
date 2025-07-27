@@ -13,5 +13,5 @@ public abstract class AssetLoader<T> implements Disposable {
 
     public abstract void load();
 
-    public abstract T get(AssetPath path);
+    public abstract T get(String path);
 }

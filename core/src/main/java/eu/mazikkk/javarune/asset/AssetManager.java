@@ -23,7 +23,7 @@ public class AssetManager implements Disposable {
         this.loaders.forEach(AssetLoader::load);
     }
 
-    public Optional<InputStream> findAsset(AssetPath path) {
+    public Optional<InputStream> findAsset(String path) {
         for (AssetSource source : sources) {
             Optional<InputStream> asset = source.getAsset(path);
 
