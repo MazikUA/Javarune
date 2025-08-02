@@ -2,21 +2,22 @@ package eu.mazikkk.javarune;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.ScreenUtils;
 import eu.mazikkk.javarune.asset.AssetManager;
+import eu.mazikkk.javarune.asset.loader.FontLoader;
 import eu.mazikkk.javarune.asset.loader.TextureLoader;
 import eu.mazikkk.javarune.asset.source.JarAssetSource;
+import eu.mazikkk.javarune.draw.DrawContext;
 import eu.mazikkk.javarune.util.viewport.DeltaruneViewport;
 
 public class Javarune extends ApplicationAdapter {
-    private DeltaruneViewport viewport;
-    private Texture tex;
-    private SpriteBatch batch;
+    public static DeltaruneViewport viewport;
+    public static SpriteBatch batch;
 
-    private AssetManager assetManager;
-    private TextureLoader textureLoader;
+    public static AssetManager assetManager;
+    public static TextureLoader textureLoader;
+    public static FontLoader fontLoader;
 
     @Override
     public void create() {
@@ -27,34 +28,41 @@ public class Javarune extends ApplicationAdapter {
         viewport = new DeltaruneViewport();
         batch = new SpriteBatch();
 
-        this.assetManager = new AssetManager();
-        this.textureLoader = new TextureLoader(this.assetManager);
-        this.assetManager.registerLoader(this.textureLoader);
-        this.assetManager.registerSource(new JarAssetSource(Javarune.class));
-        this.assetManager.load();
-
-        tex = textureLoader.get("font/default/ascii.png");
+        assetManager = new AssetManager();
+        textureLoader = new TextureLoader(assetManager);
+        assetManager.registerLoader(textureLoader);
+        fontLoader = new FontLoader(assetManager);
+        assetManager.registerLoader(fontLoader);
+        assetManager.registerSource(new JarAssetSource(Javarune.class));
+        assetManager.load();
     }
 
     @Override
     public void resize(int width, int height) {
-        this.viewport.update(width, height, true);
+        viewport.update(width, height, true);
     }
 
     @Override
     public void render() {
         ScreenUtils.clear(Color.BLACK);
 
-        this.viewport.apply();
-
+        viewport.apply();
         batch.begin();
-        batch.draw(tex, 0f, 0f);
+
+        DrawContext context = new DrawContext(batch);
+
+        context.drawText(" !\"#$%&'()*+,-./", 10, 110, "default");
+        context.drawText("0123456789:;<=>?", 10, 90, "default");
+        context.drawText("@ABCDEFGHIJKLMNO", 10, 70, "default");
+        context.drawText("PQRSTUVWXYZ[\\]^_", 10, 50, "default");
+        context.drawText("`abcdefghijklmno", 10, 30, "default");
+        context.drawText("pqrstuvwxyz{|}` ", 10, 10, "default");
+
         batch.end();
     }
 
     @Override
     public void dispose() {
-        this.assetManager.dispose();
-        this.tex.dispose();
+        assetManager.dispose();
     }
 }

@@ -15,7 +15,7 @@ public class DispatchTests {
     public static void run() {
         String json = """
             {
-                "advances": [
+                "spaces": [
                     {
                         "type": "values",
                         "values": [256, 320]
@@ -31,7 +31,7 @@ public class DispatchTests {
             """;
 
         JsonObject obj = JsonParser.parseString(json).getAsJsonObject();
-        ObjectCodec<List<Advance>> codec = Advance.CODEC.list().propertyOf("advances");
+        ObjectCodec<List<Advance>> codec = Advance.CODEC.list().propertyOf("spaces");
         List<Advance> advances = codec.decode(obj);
         System.out.println(advances);
         JsonObject obj2 = new JsonObject();

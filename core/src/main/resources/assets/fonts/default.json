@@ -1,22 +1,22 @@
 {
     "providers": [
         {
-            "type": "bitmap",
-            "file": "default/ascii.png",
+            "type": "pixmap",
+            "file": "font/default/ascii",
+            "ascent": 13,
             "glyphs": [
                 " !\"#$%&'()*+,-./",
                 "0123456789:;<=>?",
                 "@ABCDEFGHIJKLMNO",
                 "PQRSTUVWXYZ[\\]^_",
                 "`abcdefghijklmno",
-                "pqrstuvwxyz{|}`\u0000"
+                "pqrstuvwxyz{|}` "
             ]
         },
         {
             "type": "space",
-            "advances": {
-                "\u200c": 0,
-                " ": 4
+            "spaces": {
+                " ": 8
             }
         }
     ]
