@@ -37,7 +37,7 @@ public class Font implements Disposable {
 
     public void draw(DrawContext context, String text, float x, float y) {
         for (char character : text.toCharArray()) {
-            Glyph glyph = glyphs.getOrDefault(character, Glyph.BROKEN);
+            Glyph glyph = this.glyphs.getOrDefault(character, Glyph.BROKEN);
 
             glyph.draw(context, x, y, this);
 
@@ -51,7 +51,8 @@ public class Font implements Disposable {
 
     @Override
     public void dispose() {
-        atlas.dispose();
-        providers.clear();
+        this.atlas.dispose();
+        this.packer.dispose();
+        this.providers.clear();
     }
 }
