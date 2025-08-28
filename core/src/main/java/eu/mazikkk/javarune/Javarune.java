@@ -21,10 +21,6 @@ public class Javarune extends ApplicationAdapter {
 
     @Override
     public void create() {
-        // TODO: make real tests
-        // CodecTests.run();
-        // DispatchTests.run();
-
         viewport = new DeltaruneViewport();
         batch = new SpriteBatch();
 
