@@ -3,7 +3,6 @@
         {
             "type": "pixmap",
             "file": "font/default/ascii",
-            "ascent": 13,
             "glyphs": [
                 " !\"#$%&'()*+,-./",
                 "0123456789:;<=>?",

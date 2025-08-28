@@ -5,7 +5,7 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import eu.mazikkk.javarune.draw.DrawContext;
 import eu.mazikkk.javarune.font.Font;
 
-public record BitmapGlyph(Pixmap pixmap, String regionName, int u, int v, int width, int height, int ascent) implements Glyph {
+public record BitmapGlyph(Pixmap pixmap, String regionName, int u, int v, int width, int height) implements Glyph {
     @Override
     public void draw(DrawContext context, float x, float y, Font font) {
         TextureAtlas.AtlasRegion region = font.atlas.findRegion(this.regionName);
@@ -20,7 +20,7 @@ public record BitmapGlyph(Pixmap pixmap, String regionName, int u, int v, int wi
             region = font.atlas.findRegion(this.regionName);
         }
 
-        context.drawRegion(region, x, y - this.height + this.ascent);
+        context.drawRegion(region, x, y);
     }
 
     @Override

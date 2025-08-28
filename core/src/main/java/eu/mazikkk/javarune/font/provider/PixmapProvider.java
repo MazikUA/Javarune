@@ -15,7 +15,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public record PixmapProvider(PixmapAsset file, int height, int ascent, char[][] glyphs) implements FontProvider {
+public record PixmapProvider(PixmapAsset file, int height, char[][] glyphs) implements FontProvider {
     public static final Codec<char[][]> CHAR_GRID = Codecs.STRING.list().map(
         strings -> {
             int rows = strings.size();
@@ -40,7 +40,6 @@ public record PixmapProvider(PixmapAsset file, int height, int ascent, char[][] 
     public static final ObjectCodec<PixmapProvider> CODEC = RecordCodec.create(
         Codecs.PIXMAP.propertyOf("file").getter(PixmapProvider::file),
         Codecs.INT.optional(16).propertyOf("height").getter(PixmapProvider::height),
-        Codecs.INT.propertyOf("ascent").getter(PixmapProvider::ascent),
         CHAR_GRID.propertyOf("glyphs").getter(PixmapProvider::glyphs),
         PixmapProvider::new
     );
@@ -70,7 +69,7 @@ public record PixmapProvider(PixmapAsset file, int height, int ascent, char[][] 
 
                 if (width == 0) continue;
 
-                Glyph glyph = new BitmapGlyph(pixmap, String.valueOf(character), u, v, width, cellHeight, this.ascent);
+                Glyph glyph = new BitmapGlyph(pixmap, String.valueOf(character), u, v, width, cellHeight);
 
                 glyphs.put(character, glyph);
             }
