@@ -1,8 +1,0 @@
-dependencies {
-    api "com.badlogicgames.gdx:gdx:$gdxVersion"
-    implementation "com.google.code.gson:gson:$gsonVersion"
-}
-
-tasks.withType(JavaCompile).configureEach {
-    options.encoding = "UTF-8"
-}

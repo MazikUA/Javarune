@@ -1,11 +1,46 @@
-subprojects {
-    apply plugin: "java-library"
+plugins {
+    id "java"
+}
 
-    sourceCompatibility = 17
+group = "eu.mazikkk"
+version = "1.0"
 
-    version = "$projectVersion"
+repositories {
+    mavenCentral()
+}
 
-    tasks.withType(JavaCompile).configureEach {
-        options.incremental = true
+dependencies {
+    implementation platform(libs.lwjgl.bom)
+
+    implementation(libs.lwjgl)
+    implementation(libs.lwjgl.glfw)
+    implementation(libs.lwjgl.opengl)
+    implementation(libs.lwjgl.stb)
+
+    implementation(libs.lwjgl) {
+        artifact {
+            classifier = "natives-windows"
+        }
     }
+    implementation(libs.lwjgl.glfw) {
+        artifact {
+            classifier = "natives-windows"
+        }
+    }
+    implementation(libs.lwjgl.opengl) {
+        artifact {
+            classifier = "natives-windows"
+        }
+    }
+    implementation(libs.lwjgl.stb) {
+        artifact {
+            classifier = "natives-windows"
+        }
+    }
+
+    implementation(libs.gson)
+
+    compileOnly(libs.jspecify)
+
+    implementation(libs.joml)
 }
