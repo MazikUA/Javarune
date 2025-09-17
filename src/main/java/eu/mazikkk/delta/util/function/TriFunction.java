@@ -1,4 +1,4 @@
-package eu.mazikkk.javarune.util.function;
+package eu.mazikkk.delta.util.function;
 
 @FunctionalInterface
 public interface TriFunction<T1, T2, T3, R> {

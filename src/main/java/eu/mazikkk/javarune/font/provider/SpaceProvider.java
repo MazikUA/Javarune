@@ -2,7 +2,6 @@ package eu.mazikkk.javarune.font.provider;
 
 import eu.mazikkk.delta.codec.Codecs;
 import eu.mazikkk.delta.codec.ObjectCodec;
-import eu.mazikkk.delta.codec.RecordCodec;
 import eu.mazikkk.javarune.font.FontType;
 import eu.mazikkk.javarune.font.glyph.Glyph;
 import eu.mazikkk.javarune.font.glyph.SpaceGlyph;
@@ -11,7 +10,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public record SpaceProvider(Map<String, Integer> spaces) implements FontProvider {
-    public static final ObjectCodec<SpaceProvider> CODEC = RecordCodec.create(
+    public static final ObjectCodec<SpaceProvider> CODEC = Codecs.record(
             Codecs.map(Codecs.STRING, Codecs.INT).propertyOf("spaces").getter(SpaceProvider::spaces),
             SpaceProvider::new
     );

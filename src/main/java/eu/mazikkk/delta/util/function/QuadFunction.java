@@ -1,4 +1,4 @@
-package eu.mazikkk.javarune.util.function;
+package eu.mazikkk.delta.util.function;
 
 @FunctionalInterface
 public interface QuadFunction<T1, T2, T3, T4, R> {

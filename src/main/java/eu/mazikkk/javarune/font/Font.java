@@ -2,7 +2,7 @@ package eu.mazikkk.javarune.font;
 
 import eu.mazikkk.delta.Renderer;
 import eu.mazikkk.delta.codec.Codec;
-import eu.mazikkk.delta.codec.RecordCodec;
+import eu.mazikkk.delta.codec.Codecs;
 import eu.mazikkk.delta.util.TextureAtlas;
 import eu.mazikkk.javarune.font.glyph.Glyph;
 import eu.mazikkk.javarune.font.provider.FontProvider;
@@ -13,7 +13,7 @@ import java.util.Map;
 
 public class Font implements AutoCloseable {
     public static final int LINE_HEIGHT = 16;
-    public static final Codec<Font> CODEC = RecordCodec.create(
+    public static final Codec<Font> CODEC = Codecs.record(
             FontProvider.CODEC.list().propertyOf("providers").getter(font -> font.providers),
             Font::new
     ).toCodec();

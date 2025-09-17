@@ -3,7 +3,6 @@ package eu.mazikkk.delta.gl;
 import eu.mazikkk.delta.*;
 import eu.mazikkk.delta.codec.Codec;
 import eu.mazikkk.delta.codec.Codecs;
-import eu.mazikkk.delta.codec.RecordCodec;
 import eu.mazikkk.delta.util.Color;
 import eu.mazikkk.delta.util.Pixmap;
 import org.joml.Matrix4f;
@@ -22,7 +21,7 @@ import java.util.function.Function;
 
 public class GLRenderer extends Renderer {
     public final GLCapabilities capabilities;
-    public final Codec<GLShaderDefinition> shaderDefinitionCodec = RecordCodec.create(
+    public final Codec<GLShaderDefinition> shaderDefinitionCodec = Codecs.record(
             Codecs.STRING.propertyOf("vertex").getter(GLShaderDefinition::vertex),
             Codecs.STRING.propertyOf("fragment").getter(GLShaderDefinition::fragment),
             GLShaderDefinition::new

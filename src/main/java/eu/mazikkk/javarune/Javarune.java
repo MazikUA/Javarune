@@ -68,24 +68,24 @@ public class Javarune implements AutoCloseable {
 
         this.viewport.enableScissors();
 
-        renderer.setClearColor(Color.fromRgb(0xFF0000));
+        renderer.setClearColor(Color.fromRgb(0x505050));
         renderer.clear();
         renderer.drawTexture(
-                texture("misc/assgore"),
+                texture("misc/logo"),
                 shaderLoader.get("texture").orElseThrow(),
+                60, 60,
                 0, 0,
-                0, 0,
-                320, 240,
-                40, 40,
-                40, 40
+                219, 24,
+                219, 24,
+                219, 24
         );
 
-        fontLoader.get("default").draw(renderer, " !\"#$%&'()*+,-./", 50, 320);
-        fontLoader.get("default").draw(renderer, "0123456789:;<=>?", 50, 340);
-        fontLoader.get("default").draw(renderer, "@ABCDEFGHIJKLMNO", 50, 360);
-        fontLoader.get("default").draw(renderer, "PQRSTUVWXYZ[\\]^_", 50, 380);
-        fontLoader.get("default").draw(renderer, "`abcdefghijklmno", 50, 400);
-        fontLoader.get("default").draw(renderer, "pqrstuvwxyz{|}` ", 50, 420);
+        fontLoader.get("default").draw(renderer, " !\"#$%&'()*+,-./", 50, 120);
+        fontLoader.get("default").draw(renderer, "0123456789:;<=>?", 50, 140);
+        fontLoader.get("default").draw(renderer, "@ABCDEFGHIJKLMNO", 50, 160);
+        fontLoader.get("default").draw(renderer, "PQRSTUVWXYZ[\\]^_", 50, 180);
+        fontLoader.get("default").draw(renderer, "`abcdefghijklmno", 50, 200);
+        fontLoader.get("default").draw(renderer, "pqrstuvwxyz{|}` ", 50, 220);
 
         this.viewport.disableScissors();
     }

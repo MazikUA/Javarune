@@ -3,7 +3,6 @@ package eu.mazikkk.javarune.font.provider;
 import eu.mazikkk.delta.codec.Codec;
 import eu.mazikkk.delta.codec.Codecs;
 import eu.mazikkk.delta.codec.ObjectCodec;
-import eu.mazikkk.delta.codec.RecordCodec;
 import eu.mazikkk.delta.util.Color;
 import eu.mazikkk.delta.util.Pixmap;
 import eu.mazikkk.javarune.asset.PixmapAsset;
@@ -38,7 +37,7 @@ public record PixmapProvider(PixmapAsset file, int height, char[][] glyphs) impl
                 return strings;
             }
     );
-    public static final ObjectCodec<PixmapProvider> CODEC = RecordCodec.create(
+    public static final ObjectCodec<PixmapProvider> CODEC = Codecs.record(
             PixmapAsset.CODEC.propertyOf("file").getter(PixmapProvider::file),
             Codecs.INT.optional(16).propertyOf("height").getter(PixmapProvider::height),
             CHAR_GRID.propertyOf("glyphs").getter(PixmapProvider::glyphs),
