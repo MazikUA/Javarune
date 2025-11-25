@@ -2,8 +2,8 @@ plugins {
     id "java"
 }
 
-group = "eu.mazikkk"
-version = "1.0"
+group = "ua.mazik"
+version = "0.0.1"
 
 repositories {
     mavenCentral()
