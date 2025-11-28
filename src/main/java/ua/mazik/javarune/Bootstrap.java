@@ -4,7 +4,6 @@ import org.lwjgl.glfw.GLFW;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.system.MemoryUtil;
 import ua.mazik.delta.GLFWWindow;
-import ua.mazik.delta.renderer.Renderer;
 
 public class Bootstrap {
     public static void main(String[] args) {
@@ -13,8 +12,6 @@ public class Bootstrap {
             if (!GLFW.glfwInit()) {
                 return;
             }
-
-            Renderer.init(Renderer.API.OpenGL);
 
             GLFWWindow window = new GLFWWindow(640, 480, "Javarune");
 

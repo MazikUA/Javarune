@@ -1,11 +1,7 @@
 package ua.mazik.javarune.asset.loader;
 
-import com.google.gson.JsonElement;
-import com.google.gson.JsonParser;
 import org.jspecify.annotations.NonNull;
-import ua.mazik.delta.renderer.Renderer;
-import ua.mazik.delta.renderer.ShaderDefinition;
-import ua.mazik.delta.renderer.ShaderProgram;
+import ua.mazik.delta.renderer.Shader;
 import ua.mazik.javarune.asset.AssetLoader;
 import ua.mazik.javarune.asset.AssetManager;
 
@@ -15,8 +11,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
-public class ShaderLoader extends AssetLoader<Optional<ShaderProgram>> {
-    private final Map<String, ShaderProgram> shaders = new HashMap<>();
+public class ShaderLoader extends AssetLoader<Optional<Shader>> {
+    private final Map<String, Shader> shaders = new HashMap<>();
 
     public ShaderLoader(@NonNull AssetManager assetManager) {
         super("shaders", assetManager);
@@ -28,34 +24,47 @@ public class ShaderLoader extends AssetLoader<Optional<ShaderProgram>> {
     }
 
     @Override
-    public @NonNull Optional<ShaderProgram> get(@NonNull String path) {
-        ShaderProgram texture = this.shaders.get(path);
+    public @NonNull Optional<Shader> get(@NonNull String path) {
+        Shader texture = this.shaders.get(path);
 
         if (texture == null) {
-            Optional<InputStream> asset = this.assetManager.findAsset("shaders/opengl/" + path + ".json");
+            Optional<InputStream> vertex = this.assetManager.findAsset("shaders/vertex/" + path + ".vsh");
+            Optional<InputStream> fragment = this.assetManager.findAsset("shaders/fragment/" + path + ".fsh");
 
-            if (asset.isPresent()) {
-                try (InputStream in = asset.get()) {
-                    byte[] bytes = in.readAllBytes();
+            if (fragment.isPresent() && vertex.isPresent()) {
+                String vertexString;
+                String fragmentString;
 
-                    JsonElement json = JsonParser.parseString(new String(bytes));
-                    ShaderDefinition definition = Renderer.getInstance().getShaderDefinitionCodec().decode(json);
-
-                    return Optional.of(Renderer.getInstance().createShader(definition, (readerPath) -> this.assetManager.findAsset("shaders/opengl/" + readerPath)));
+                try (InputStream in = vertex.get()) {
+                    vertexString = new String(in.readAllBytes());
                 } catch (IOException e) {
                     e.printStackTrace();
+                    return Optional.empty();
                 }
+
+                try (InputStream in = fragment.get()) {
+                    fragmentString = new String(in.readAllBytes());
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    return Optional.empty();
+                }
+
+                Shader shader = new Shader(vertexString, fragmentString);
+
+                this.shaders.put(path, shader);
+
+                return Optional.of(shader);
             }
 
             return Optional.empty();
         } else {
-            return Optional.empty();
+            return Optional.of(texture);
         }
     }
 
     @Override
     public void close() {
-        this.shaders.values().forEach(ShaderProgram::close);
+        this.shaders.values().forEach(Shader::close);
         this.shaders.clear();
     }
 }

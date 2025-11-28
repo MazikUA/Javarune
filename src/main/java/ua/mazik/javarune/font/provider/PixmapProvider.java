@@ -3,7 +3,7 @@ package ua.mazik.javarune.font.provider;
 import ua.mazik.delta.codec.Codec;
 import ua.mazik.delta.codec.Codecs;
 import ua.mazik.delta.codec.ObjectCodec;
-import ua.mazik.delta.util.Color;
+import ua.mazik.delta.util.Pixel;
 import ua.mazik.delta.util.Pixmap;
 import ua.mazik.javarune.asset.PixmapAsset;
 import ua.mazik.javarune.font.FontType;
@@ -81,9 +81,9 @@ public record PixmapProvider(PixmapAsset file, int height, char[][] glyphs) impl
     private int getWidth(Pixmap pixmap, int cellX, int cellY, int cellWidth, int cellHeight) {
         for (int x = cellWidth - 1; x >= 0; x--) {
             for (int y = 0; y < cellHeight; y++) {
-                Color pixel = pixmap.getPixel(cellX + x, cellY + y);
+                Pixel pixel = pixmap.getPixel(cellX + x, cellY + y);
 
-                if (pixel.alpha != 0) {
+                if (pixel.alpha() != 0) {
                     return x + 1;
                 }
             }

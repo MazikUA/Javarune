@@ -1,27 +1,38 @@
 package ua.mazik.delta.renderer;
 
-public abstract class Viewport {
+import org.lwjgl.opengl.GL33;
+
+public class Viewport {
     public final Scaling scaling;
     public final Camera camera;
 
-    private int x;
-    private int y;
     private int width;
     private int height;
 
-    public Viewport(int width, int height, Scaling scaling, Camera camera) {
-        this.setSize(width, height);
+    private int x;
+    private int y;
 
+    public Viewport(int width, int height, Scaling scaling) {
         this.scaling = scaling;
-        this.camera = camera;
+        this.camera = new Camera(width, height);
+
+        this.width = width;
+        this.height = height;
     }
 
-    public abstract void enableScissors();
-
-    public abstract void disableScissors();
-
     public void apply() {
+        GL33.glViewport(this.x, this.y, this.width, this.height);
+
         this.camera.apply();
+    }
+
+    public void enableScissors() {
+        GL33.glEnable(GL33.GL_SCISSOR_TEST);
+        GL33.glScissor(this.x, this.y, this.width, this.height);
+    }
+
+    public void disableScissors() {
+        GL33.glDisable(GL33.GL_SCISSOR_TEST);
     }
 
     public void resize(int windowWidth, int windowHeight) {

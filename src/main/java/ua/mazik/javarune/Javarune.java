@@ -6,12 +6,14 @@ import ua.mazik.delta.GLFWWindow;
 import ua.mazik.delta.renderer.Renderer;
 import ua.mazik.delta.renderer.Texture;
 import ua.mazik.delta.renderer.Viewport;
-import ua.mazik.delta.util.Color;
+import ua.mazik.delta.util.Pixel;
 import ua.mazik.javarune.asset.AssetManager;
 import ua.mazik.javarune.asset.loader.FontLoader;
 import ua.mazik.javarune.asset.loader.ShaderLoader;
 import ua.mazik.javarune.asset.loader.TextureLoader;
 import ua.mazik.javarune.asset.source.JarAssetSource;
+import ua.mazik.javarune.render.RenderContext;
+import ua.mazik.javarune.render.Shaders;
 
 public class Javarune implements AutoCloseable {
     private static Javarune instance;
@@ -31,10 +33,10 @@ public class Javarune implements AutoCloseable {
         GLFW.glfwSwapInterval(1);
 
         this.window = window;
-        this.viewport = window.renderer.createViewport(640, 480, Viewport.Scaling.FIT);
+        this.viewport = new Viewport(640, 480, Viewport.Scaling.FIT);
         this.viewport.apply();
 
-        window.renderer.setProjectionMatrix(this.viewport.camera.getProjectionMatrix());
+        Renderer.setProjectionMatrix(this.viewport.camera.projectionMatrix);
 
         this.assetManager = new AssetManager();
         this.textureLoader = new TextureLoader(assetManager);
@@ -62,37 +64,43 @@ public class Javarune implements AutoCloseable {
         return getInstance().textureLoader.get(path);
     }
 
-    public void render(Renderer renderer) {
-        renderer.setClearColor(Color.fromRgb(0x000000));
-        renderer.clear();
+    public void render() {
+        Renderer.setClearColor(Pixel.rgb(0x000000));
+        Renderer.clear();
 
         this.viewport.enableScissors();
 
-        renderer.setClearColor(Color.fromRgb(0x505050));
-        renderer.clear();
-        renderer.drawTexture(
-                texture("misc/logo"),
-                shaderLoader.get("texture").orElseThrow(),
+        Renderer.setClearColor(Pixel.rgb(0x505050));
+        Renderer.clear();
+
+        RenderContext ctx = new RenderContext();
+
+        ctx.drawTexture(
+                "misc/logo",
+                Shaders.TEXTURE,
                 60, 60,
                 0, 0,
-                219, 24,
                 219, 24,
                 219, 24
         );
 
-        fontLoader.get("default").draw(renderer, " !\"#$%&'()*+,-./", 50, 120);
-        fontLoader.get("default").draw(renderer, "0123456789:;<=>?", 50, 140);
-        fontLoader.get("default").draw(renderer, "@ABCDEFGHIJKLMNO", 50, 160);
-        fontLoader.get("default").draw(renderer, "PQRSTUVWXYZ[\\]^_", 50, 180);
-        fontLoader.get("default").draw(renderer, "`abcdefghijklmno", 50, 200);
-        fontLoader.get("default").draw(renderer, "pqrstuvwxyz{|}` ", 50, 220);
+        fontLoader.get("default").draw(ctx, " !\"#$%&'()*+,-./", 50, 120);
+        fontLoader.get("default").draw(ctx, "0123456789:;<=>?", 50, 140);
+        fontLoader.get("default").draw(ctx, "@ABCDEFGHIJKLMNO", 50, 160);
+        fontLoader.get("default").draw(ctx, "PQRSTUVWXYZ[\\]^_", 50, 180);
+        fontLoader.get("default").draw(ctx, "`abcdefghijklmno", 50, 200);
+        fontLoader.get("default").draw(ctx, "pqrstuvwxyz{|}` ", 50, 220);
 
         this.viewport.disableScissors();
+
+        Renderer.drawElement(ctx.elements);
     }
 
     @Override
     public void close() {
         this.assetManager.close();
         this.window.close();
+
+        Renderer.shutdown();
     }
 }

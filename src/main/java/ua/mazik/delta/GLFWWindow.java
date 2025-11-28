@@ -7,14 +7,11 @@ import org.lwjgl.glfw.GLFWWindowSizeCallbackI;
 import org.lwjgl.system.MemoryUtil;
 import ua.mazik.delta.renderer.Renderer;
 
-import java.util.function.Consumer;
-
 import static org.lwjgl.glfw.GLFW.glfwSetWindowShouldClose;
 
 // при написанні цієї дурні розробник (поки що) не випав із вікна жодного разу
 public class GLFWWindow implements AutoCloseable {
     public final long handle;
-    public final Renderer renderer;
 
     public GLFWWindowSizeCallbackI windowSizeCallback = (window, windowWidth, windowHeight) -> {
     };
@@ -37,19 +34,18 @@ public class GLFWWindow implements AutoCloseable {
         GLFW.glfwSetWindowSizeCallback(this.handle, this::windowSizeCallback);
         GLFW.glfwSetKeyCallback(this.handle, this::keyCallback);
 
-        this.renderer = Renderer.getInstance();
-        this.renderer.onWindowCreate(this);
+        Renderer.init(this);
     }
 
     public void show() {
         GLFW.glfwShowWindow(this.handle);
     }
 
-    public void loop(Consumer<Renderer> rendererConsumer) {
+    public void loop(Runnable rendererConsumer) {
         while (!GLFW.glfwWindowShouldClose(this.handle)) {
             GLFW.glfwPollEvents();
 
-            rendererConsumer.accept(this.renderer);
+            rendererConsumer.run();
 
             GLFW.glfwSwapBuffers(this.handle);
         }

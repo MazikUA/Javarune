@@ -1,8 +1,8 @@
 package ua.mazik.javarune.font.glyph;
 
-import ua.mazik.delta.renderer.Renderer;
-import ua.mazik.javarune.Javarune;
 import ua.mazik.javarune.font.Font;
+import ua.mazik.javarune.render.RenderContext;
+import ua.mazik.javarune.render.Shaders;
 
 /**
  * DRIVING IN MY CAR
@@ -22,8 +22,8 @@ import ua.mazik.javarune.font.Font;
  */
 public class AssgoreGlyph implements Glyph {
     @Override
-    public void draw(Renderer renderer, int x, int y, Font font) {
-        renderer.drawTexture(Javarune.texture("misc/assgore"), Javarune.getInstance().shaderLoader.get("texture").orElseThrow(), x, y, 0, 0, 8, 16, 40, 40, 40, 40);
+    public void draw(RenderContext renderer, int x, int y, Font font) {
+        renderer.drawTexture("misc/assgore", Shaders.TEXTURE, x, y, 0, 0, 40, 40, 8, 16);
     }
 
     @Override

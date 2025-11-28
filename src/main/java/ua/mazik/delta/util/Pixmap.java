@@ -3,7 +3,6 @@ package ua.mazik.delta.util;
 import org.jspecify.annotations.NonNull;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.stb.STBImage;
-import ua.mazik.delta.renderer.Renderer;
 import ua.mazik.delta.renderer.Texture;
 
 import java.nio.ByteBuffer;
@@ -61,7 +60,7 @@ public class Pixmap implements AutoCloseable {
         return fromImage(imageBuffer);
     }
 
-    public @NonNull Color getPixel(int x, int y) {
+    public @NonNull Pixel getPixel(int x, int y) {
         if (x < 0 || y < 0 || x >= width || y >= height) {
             throw new IllegalArgumentException("Pixel out of bounds: (" + x + "," + y + ")");
         }
@@ -73,20 +72,20 @@ public class Pixmap implements AutoCloseable {
         int b = this.rawData.get(offset + 2) & 0xFF;
         int a = this.rawData.get(offset + 3) & 0xFF;
 
-        return new Color(r, g, b, a);
+        return new Pixel(r, g, b, a);
     }
 
-    public void setPixel(int x, int y, @NonNull Color color) {
+    public void setPixel(int x, int y, @NonNull Pixel color) {
         if (!this.inBounds(x, y)) {
             throw new IllegalArgumentException("Pixel out of bounds: (" + x + "," + y + ")");
         }
 
         int offset = (y * width + x) * 4;
 
-        rawData.put(offset, (byte) color.red);
-        rawData.put(offset + 1, (byte) color.green);
-        rawData.put(offset + 2, (byte) color.blue);
-        rawData.put(offset + 3, (byte) color.alpha);
+        rawData.put(offset, (byte) color.red());
+        rawData.put(offset + 1, (byte) color.green());
+        rawData.put(offset + 2, (byte) color.blue());
+        rawData.put(offset + 3, (byte) color.alpha());
     }
 
     public void drawPixmap(int x, int y, @NonNull Pixmap pixmap) {
@@ -103,7 +102,7 @@ public class Pixmap implements AutoCloseable {
                 int dstY = y + j;
 
                 if (this.inBounds(dstX, dstY)) {
-                    Color color = pixmap.getPixel(srcX, srcY);
+                    Pixel color = pixmap.getPixel(srcX, srcY);
 
                     this.setPixel(dstX, dstY, color);
                 }
@@ -125,7 +124,7 @@ public class Pixmap implements AutoCloseable {
     }
 
     public @NonNull Texture toTexture() {
-        return Renderer.getInstance().createTexture(this.width, this.height, this.getBuffer());
+        return new Texture(this.width, this.height, this.getBuffer());
     }
 
     @Override

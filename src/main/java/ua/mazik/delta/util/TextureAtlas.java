@@ -2,12 +2,15 @@ package ua.mazik.delta.util;
 
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
-import ua.mazik.delta.renderer.Renderer;
+import ua.mazik.delta.renderer.Shader;
 import ua.mazik.delta.renderer.Texture;
+import ua.mazik.javarune.render.RenderContext;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
+import java.util.function.Supplier;
 
 public class TextureAtlas implements AutoCloseable {
     public final int width;
@@ -93,7 +96,7 @@ public class TextureAtlas implements AutoCloseable {
                     this.regions.add(newRegion);
                     this.pixmap.drawPixmap(x, y, pixmap);
 
-                    Renderer.getInstance().subImage(this.texture, pixmap, x, y, pixmap.width, pixmap.height);
+                    this.texture.subImage(pixmap, x, y, pixmap.width, pixmap.height);
 
                     return true;
                 }
@@ -121,6 +124,8 @@ public class TextureAtlas implements AutoCloseable {
     }
 
     public record Region(int x, int y, int width, int height, @NonNull String name, @NonNull Page page) {
-
+        public void draw(RenderContext ctx, Supplier<Optional<Shader>> shaderSupplier, int x, int y) {
+            ctx.drawTexture(this.page.texture, shaderSupplier, x, y, this.x, this.y, this.x + this.width, this.y + this.height, this.width, this.height);
+        }
     }
 }
