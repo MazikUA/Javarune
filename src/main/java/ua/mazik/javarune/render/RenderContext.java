@@ -5,6 +5,8 @@ import ua.mazik.delta.renderer.Texture;
 import ua.mazik.delta.renderer.draw.DrawElement;
 import ua.mazik.delta.renderer.draw.TextureDrawElement;
 import ua.mazik.javarune.Javarune;
+import ua.mazik.javarune.font.Font;
+import ua.mazik.javarune.font.glyph.Glyph;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,5 +24,23 @@ public class RenderContext {
         this.elements.add(
                 new TextureDrawElement(texture, shaderSupplier.get().orElseThrow(), x, y, u0, v0, u1, v1, width, height)
         );
+    }
+
+    public void drawText(String text, int x, int y, Font font) {
+        for (char character : text.toCharArray()) {
+            Glyph glyph = font.glyphs.getOrDefault(character, Glyph.BROKEN);
+
+            glyph.draw(this, font.atlas, x, y);
+
+            x += glyph.width();
+        }
+    }
+
+    public void drawText(String text, int x, int y, String font) {
+        this.drawText(text, x, y, Javarune.font(font));
+    }
+
+    public void drawText(String text, int x, int y) {
+        this.drawText(text, x, y, "default");
     }
 }

@@ -1,29 +1,27 @@
 package ua.mazik.delta.renderer;
 
+import org.joml.Matrix4f;
 import org.lwjgl.opengl.GL33;
 
 public class Viewport {
     public final Scaling scaling;
-    public final Camera camera;
-
+    public final Matrix4f projectionMatrix;
     private int width;
     private int height;
-
     private int x;
     private int y;
 
     public Viewport(int width, int height, Scaling scaling) {
         this.scaling = scaling;
-        this.camera = new Camera(width, height);
 
         this.width = width;
         this.height = height;
+
+        this.projectionMatrix = new Matrix4f().ortho(0, width, height, 0, -1, 1);
     }
 
     public void apply() {
         GL33.glViewport(this.x, this.y, this.width, this.height);
-
-        this.camera.apply();
     }
 
     public void enableScissors() {
@@ -70,10 +68,10 @@ public class Viewport {
         Scaling FIT = (windowWidth, windowHeight, viewport) -> {
             if (windowWidth <= 0 || windowHeight <= 0) return;
 
-            float scale = Math.min((float) windowWidth / viewport.camera.getWorldWidth(), (float) windowHeight / viewport.camera.getWorldHeight());
+            float scale = Math.min((float) windowWidth / viewport.width, (float) windowHeight / viewport.height);
 
-            int scaledWidth = Math.round(viewport.camera.getWorldWidth() * scale);
-            int scaledHeight = Math.round(viewport.camera.getWorldHeight() * scale);
+            int scaledWidth = Math.round(viewport.width * scale);
+            int scaledHeight = Math.round(viewport.height * scale);
 
             int scaledX = (windowWidth - scaledWidth) / 2;
             int scaledY = (windowHeight - scaledHeight) / 2;

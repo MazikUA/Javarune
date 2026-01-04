@@ -1,11 +1,11 @@
 package ua.mazik.javarune.font.glyph;
 
-import ua.mazik.javarune.font.Font;
+import ua.mazik.delta.util.TextureAtlas;
 import ua.mazik.javarune.render.RenderContext;
 
 public record SpaceGlyph(int space) implements Glyph {
     @Override
-    public void draw(RenderContext renderer, int x, int y, Font font) {
+    public void draw(RenderContext renderer, TextureAtlas atlas, int x, int y) {
         // your drawing no long
     }
 

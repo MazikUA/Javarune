@@ -2,7 +2,7 @@ package ua.mazik.javarune.asset.loader;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
-import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NonNull;
 import ua.mazik.javarune.asset.AssetLoader;
 import ua.mazik.javarune.asset.AssetManager;
 import ua.mazik.javarune.font.Font;
@@ -25,9 +25,9 @@ public class FontLoader extends AssetLoader<Font> {
         this.close();
     }
 
-    @NotNull
+    @NonNull
     @Override
-    public Font get(@NotNull String path) {
+    public Font get(@NonNull String path) {
         Font font = this.fonts.get(path);
 
         if (font == null) {

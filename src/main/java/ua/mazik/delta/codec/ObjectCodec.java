@@ -35,7 +35,7 @@ public interface ObjectCodec<T> {
         );
     }
 
-    default <I> RecordCodec<T, I> getter(Function<I, T> getter) {
-        return new RecordCodec<>(getter, this);
+    default <I> GetterCodec<T, I> getter(Function<I, T> getter) {
+        return new GetterCodec<>(getter, this);
     }
 }

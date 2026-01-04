@@ -6,8 +6,7 @@ import ua.mazik.delta.renderer.Texture;
 import ua.mazik.delta.renderer.VertexBuilder;
 import ua.mazik.delta.renderer.attribute.FloatAttribute;
 
-public record TextureDrawElement(Texture texture, Shader shader, int x, int y, int u0, int v0, int u1, int v1,
-                                 int width, int height) implements DrawElement {
+public record TextureDrawElement(Texture texture, Shader shader, int x, int y, int u0, int v0, int u1, int v1, int width, int height) implements DrawElement {
     @Override
     public void build(VertexBuilder builder) {
         builder.vertex(new FloatAttribute(this.x, this.y), new FloatAttribute((float) this.u0 / texture.width, (float) this.v0 / texture.height));

@@ -41,14 +41,14 @@ public class Codecs {
         );
     }
 
-    public static <T1, R> ObjectCodec<R> record(RecordCodec<T1, R> t1, Function<T1, R> constructor) {
+    public static <T1, R> ObjectCodec<R> record(GetterCodec<T1, R> t1, Function<T1, R> constructor) {
         return ObjectCodec.of(
                 object -> constructor.apply(t1.objectCodec().decode(object)),
                 (value, object) -> t1.objectCodec().encode(t1.getter().apply(value), object)
         );
     }
 
-    public static <T1, T2, R> ObjectCodec<R> record(RecordCodec<T1, R> t1, RecordCodec<T2, R> t2, BiFunction<T1, T2, R> constructor) {
+    public static <T1, T2, R> ObjectCodec<R> record(GetterCodec<T1, R> t1, GetterCodec<T2, R> t2, BiFunction<T1, T2, R> constructor) {
         return ObjectCodec.of(
                 object -> constructor.apply(t1.objectCodec().decode(object), t2.objectCodec().decode(object)),
                 (value, object) -> {
@@ -58,7 +58,7 @@ public class Codecs {
         );
     }
 
-    public static <T1, T2, T3, R> ObjectCodec<R> record(RecordCodec<T1, R> t1, RecordCodec<T2, R> t2, RecordCodec<T3, R> t3, TriFunction<T1, T2, T3, R> constructor) {
+    public static <T1, T2, T3, R> ObjectCodec<R> record(GetterCodec<T1, R> t1, GetterCodec<T2, R> t2, GetterCodec<T3, R> t3, TriFunction<T1, T2, T3, R> constructor) {
         return ObjectCodec.of(
                 object -> constructor.apply(
                         t1.objectCodec().decode(object),
@@ -73,7 +73,7 @@ public class Codecs {
         );
     }
 
-    public static <T1, T2, T3, T4, R> ObjectCodec<R> record(RecordCodec<T1, R> t1, RecordCodec<T2, R> t2, RecordCodec<T3, R> t3, RecordCodec<T4, R> t4, QuadFunction<T1, T2, T3, T4, R> constructor) {
+    public static <T1, T2, T3, T4, R> ObjectCodec<R> record(GetterCodec<T1, R> t1, GetterCodec<T2, R> t2, GetterCodec<T3, R> t3, GetterCodec<T4, R> t4, QuadFunction<T1, T2, T3, T4, R> constructor) {
         return ObjectCodec.of(
                 object -> constructor.apply(
                         t1.objectCodec().decode(object),
@@ -90,7 +90,7 @@ public class Codecs {
         );
     }
 
-    public static <T1, T2, T3, T4, T5, R> ObjectCodec<R> record(RecordCodec<T1, R> t1, RecordCodec<T2, R> t2, RecordCodec<T3, R> t3, RecordCodec<T4, R> t4, RecordCodec<T5, R> t5, PentaFunction<T1, T2, T3, T4, T5, R> constructor) {
+    public static <T1, T2, T3, T4, T5, R> ObjectCodec<R> record(GetterCodec<T1, R> t1, GetterCodec<T2, R> t2, GetterCodec<T3, R> t3, GetterCodec<T4, R> t4, GetterCodec<T5, R> t5, PentaFunction<T1, T2, T3, T4, T5, R> constructor) {
         return ObjectCodec.of(
                 object -> constructor.apply(
                         t1.objectCodec().decode(object),

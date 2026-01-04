@@ -5,8 +5,7 @@ import com.google.gson.JsonObject;
 import java.util.function.Function;
 
 @SuppressWarnings("unchecked")
-public record DispatchCodec<T, U>(String key, Codec<U> keyCodec, Function<T, U> typeGetter,
-                                  Function<U, ObjectCodec<? extends T>> codecGetter) implements ObjectCodec<T> {
+public record DispatchCodec<T, U>(String key, Codec<U> keyCodec, Function<T, U> typeGetter, Function<U, ObjectCodec<? extends T>> codecGetter) implements ObjectCodec<T> {
     @Override
     public T decode(JsonObject object) {
         return codecGetter.apply(keyCodec.decode(object.get(key))).decode(object);

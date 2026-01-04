@@ -4,6 +4,7 @@ import org.lwjgl.glfw.GLFW;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.system.MemoryUtil;
 import ua.mazik.delta.GLFWWindow;
+import ua.mazik.delta.audio.Audio;
 
 public class Bootstrap {
     public static void main(String[] args) {
@@ -14,11 +15,14 @@ public class Bootstrap {
             }
 
             GLFWWindow window = new GLFWWindow(640, 480, "Javarune");
+            Audio.init();
 
             Javarune javarune = new Javarune(window);
 
             window.loop(javarune::render);
             javarune.close();
+
+            Audio.shutdown();
 
             //noinspection resource
             GLFW.glfwSetErrorCallback(null);
