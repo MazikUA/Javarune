@@ -66,10 +66,11 @@ public record PixmapProvider(PixmapAsset file, int height, char[][] glyphs) impl
                 int v = cellHeight * row;
 
                 int width = getWidth(pixmap, u, v, cellWidth, cellHeight);
+                int height = getHeight(pixmap, u, v, cellWidth, cellHeight);
 
                 if (width == 0) continue;
 
-                Glyph glyph = new BitmapGlyph(pixmap, String.valueOf(character), u, v, width, cellHeight);
+                Glyph glyph = new BitmapGlyph(pixmap, String.valueOf(character), u, v, width, height);
 
                 glyphs.put(character, glyph);
             }
@@ -85,6 +86,20 @@ public record PixmapProvider(PixmapAsset file, int height, char[][] glyphs) impl
 
                 if (pixel.alpha() != 0) {
                     return x + 1;
+                }
+            }
+        }
+
+        return 0;
+    }
+
+    private int getHeight(Pixmap pixmap, int cellX, int cellY, int cellWidth, int cellHeight) {
+        for (int y = cellHeight - 1; y >= 0; y--) {
+            for (int x = 0; x < cellWidth; x++) {
+                Pixel pixel = pixmap.getPixel(cellX + x, cellY + y);
+
+                if (pixel.alpha() != 0) {
+                    return y + 1;
                 }
             }
         }

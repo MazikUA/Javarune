@@ -6,6 +6,7 @@ import org.lwjgl.opengl.GL33;
 public class Viewport {
     public final Scaling scaling;
     public final Matrix4f projectionMatrix;
+
     private int width;
     private int height;
     private int x;
@@ -72,6 +73,19 @@ public class Viewport {
 
             int scaledWidth = Math.round(viewport.width * scale);
             int scaledHeight = Math.round(viewport.height * scale);
+
+            int scaledX = (windowWidth - scaledWidth) / 2;
+            int scaledY = (windowHeight - scaledHeight) / 2;
+
+            viewport.setSize(scaledWidth, scaledHeight);
+            viewport.setPosition(scaledX, scaledY);
+        };
+
+        Scaling FIT_PIXEL_PERFECT = (windowWidth, windowHeight, viewport) -> {
+            int scale = Math.min(windowWidth / 320, windowHeight / 240);
+
+            int scaledWidth = 320 * scale;
+            int scaledHeight = 240 * scale;
 
             int scaledX = (windowWidth - scaledWidth) / 2;
             int scaledY = (windowHeight - scaledHeight) / 2;

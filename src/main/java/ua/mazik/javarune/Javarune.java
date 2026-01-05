@@ -26,31 +26,29 @@ public class Javarune implements AutoCloseable {
 
     public final AssetManager assetManager;
 
-    public final TextureLoader textureLoader;
-    public final ShaderLoader shaderLoader;
     public final FontLoader fontLoader;
+    public final ShaderLoader shaderLoader;
     public final SoundLoader soundLoader;
+    public final TextureLoader textureLoader;
 
-    public Javarune(GLFWWindow window) {
+    public Javarune(@NonNull GLFWWindow window) {
         instance = this;
 
         GLFW.glfwSwapInterval(1);
 
         this.window = window;
-        this.viewport = new Viewport(640, 480, Viewport.Scaling.FIT);
+        this.viewport = new Viewport(640, 480, Viewport.Scaling.FIT_PIXEL_PERFECT);
         this.viewport.apply();
 
         Renderer.setProjectionMatrix(this.viewport.projectionMatrix);
 
         this.assetManager = new AssetManager();
-        this.textureLoader = new TextureLoader(assetManager);
-        this.assetManager.registerLoader(this.textureLoader);
-        this.shaderLoader = new ShaderLoader(assetManager);
-        this.assetManager.registerLoader(this.shaderLoader);
-        this.fontLoader = new FontLoader(assetManager);
-        this.assetManager.registerLoader(this.fontLoader);
-        this.soundLoader = new SoundLoader(assetManager);
-        this.assetManager.registerLoader(this.soundLoader);
+
+        this.fontLoader = this.assetManager.registerLoader(FontLoader::new);
+        this.shaderLoader = this.assetManager.registerLoader(ShaderLoader::new);
+        this.soundLoader = this.assetManager.registerLoader(SoundLoader::new);
+        this.textureLoader = this.assetManager.registerLoader(TextureLoader::new);
+
         this.assetManager.registerSource(new JarAssetSource(Javarune.class));
         this.assetManager.load();
 
@@ -62,19 +60,19 @@ public class Javarune implements AutoCloseable {
         window.show();
     }
 
-    public static Javarune getInstance() {
+    public static @NonNull Javarune getInstance() {
         return instance;
     }
 
-    public static @NonNull Texture texture(String path) {
+    public static @NonNull Texture texture(@NonNull String path) {
         return getInstance().textureLoader.get(path);
     }
 
-    public static @NonNull Font font(String path) {
+    public static @NonNull Font font(@NonNull String path) {
         return getInstance().fontLoader.get(path);
     }
 
-    public static void playSound(String path) {
+    public static void playSound(@NonNull String path) {
         getInstance().soundLoader.get(path).ifPresent(Sound::play);
     }
 
@@ -98,12 +96,12 @@ public class Javarune implements AutoCloseable {
                 219, 24
         );
 
-        ctx.drawText(" !\"#$%&'()*+,-./", 50, 120);
-        ctx.drawText("0123456789:;<=>?", 50, 140);
-        ctx.drawText("@ABCDEFGHIJKLMNO", 50, 160);
-        ctx.drawText("PQRSTUVWXYZ[\\]^_", 50, 180);
-        ctx.drawText("`abcdefghijklmno", 50, 200);
-        ctx.drawText("pqrstuvwxyz{|}` ", 50, 220);
+        ctx.drawText(" !\"#$%&'()*+,-./", 50, 120, Pixel.WHITE);
+        ctx.drawText("0123456789:;<=>?", 50, 140, Pixel.WHITE);
+        ctx.drawText("@ABCDEFGHIJKLMNO", 50, 160, Pixel.WHITE);
+        ctx.drawText("PQRSTUVWXYZ[\\]^_", 50, 180, Pixel.WHITE);
+        ctx.drawText("`abcdefghijklmno", 50, 200, Pixel.WHITE);
+        ctx.drawText("pqrstuvwxyz{|}` ", 50, 220, Pixel.WHITE);
 
         this.viewport.disableScissors();
 

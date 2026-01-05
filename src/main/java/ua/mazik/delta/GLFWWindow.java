@@ -21,7 +21,6 @@ public class GLFWWindow implements AutoCloseable {
     private int width;
     private int height;
 
-    @SuppressWarnings("resource")
     public GLFWWindow(int width, int height, String title) {
         GLFW.glfwDefaultWindowHints();
         GLFW.glfwWindowHint(GLFW.GLFW_VISIBLE, GLFW.GLFW_FALSE);

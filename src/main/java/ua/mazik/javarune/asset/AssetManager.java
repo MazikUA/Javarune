@@ -1,16 +1,21 @@
 package ua.mazik.javarune.asset;
 
+import org.jspecify.annotations.NonNull;
+
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Function;
 
 public class AssetManager implements AutoCloseable {
     public final List<AssetSource> sources = new ArrayList<>();
     public final List<AssetLoader<?>> loaders = new ArrayList<>();
 
-    public void registerLoader(AssetLoader<?> assetLoader) {
-        this.loaders.add(assetLoader);
+    public <T extends AssetLoader<?>> @NonNull T registerLoader(Function<AssetManager, T> assetLoader) {
+        T loader = assetLoader.apply(this);
+        this.loaders.add(loader);
+        return loader;
     }
 
     public void registerSource(AssetSource assetSource) {

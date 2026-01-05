@@ -4,6 +4,7 @@ import ua.mazik.delta.renderer.Shader;
 import ua.mazik.delta.renderer.Texture;
 import ua.mazik.delta.renderer.draw.DrawElement;
 import ua.mazik.delta.renderer.draw.TextureDrawElement;
+import ua.mazik.delta.util.Pixel;
 import ua.mazik.javarune.Javarune;
 import ua.mazik.javarune.font.Font;
 import ua.mazik.javarune.font.glyph.Glyph;
@@ -21,26 +22,34 @@ public class RenderContext {
     }
 
     public void drawTexture(Texture texture, Supplier<Optional<Shader>> shaderSupplier, int x, int y, int u0, int v0, int u1, int v1, int width, int height) {
+        this.drawTexture(texture, shaderSupplier, x, y, u0, v0, u1, v1, width, height, Pixel.WHITE, Pixel.WHITE, Pixel.WHITE, Pixel.WHITE);
+    }
+
+    public void drawTexture(Texture texture, Supplier<Optional<Shader>> shaderSupplier, int x, int y, int u0, int v0, int u1, int v1, int width, int height, Pixel color) {
+        this.drawTexture(texture, shaderSupplier, x, y, u0, v0, u1, v1, width, height, color, color, color, color);
+    }
+
+    public void drawTexture(Texture texture, Supplier<Optional<Shader>> shaderSupplier, int x, int y, int u0, int v0, int u1, int v1, int width, int height, Pixel topLeftColor, Pixel topRightColor, Pixel bottomRightColor, Pixel bottomLeftColor) {
         this.elements.add(
-                new TextureDrawElement(texture, shaderSupplier.get().orElseThrow(), x, y, u0, v0, u1, v1, width, height)
+                new TextureDrawElement(texture, shaderSupplier.get().orElseThrow(), x, y, u0, v0, u1, v1, width, height, topLeftColor, topRightColor, bottomLeftColor, bottomRightColor)
         );
     }
 
-    public void drawText(String text, int x, int y, Font font) {
+    public void drawText(String text, int x, int y, Font font, Pixel color) {
         for (char character : text.toCharArray()) {
             Glyph glyph = font.glyphs.getOrDefault(character, Glyph.BROKEN);
 
-            glyph.draw(this, font.atlas, x, y);
+            glyph.draw(this, font.atlas, x, y, color);
 
             x += glyph.width();
         }
     }
 
-    public void drawText(String text, int x, int y, String font) {
-        this.drawText(text, x, y, Javarune.font(font));
+    public void drawText(String text, int x, int y, String font, Pixel color) {
+        this.drawText(text, x, y, Javarune.font(font), color);
     }
 
-    public void drawText(String text, int x, int y) {
-        this.drawText(text, x, y, "default");
+    public void drawText(String text, int x, int y, Pixel color) {
+        this.drawText(text, x, y, "default", color);
     }
 }
