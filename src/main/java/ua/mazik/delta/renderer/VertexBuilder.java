@@ -1,81 +1,72 @@
 package ua.mazik.delta.renderer;
 
 import org.lwjgl.BufferUtils;
-import ua.mazik.delta.renderer.attribute.VertexAttribute;
+import ua.mazik.delta.renderer.vertex.VertexFormat;
 
 import java.nio.ByteBuffer;
-import java.nio.IntBuffer;
 import java.util.ArrayList;
 import java.util.List;
 
-public class VertexBuilder {
-    public final List<VertexAttribute[]> vertices = new ArrayList<>();
-    public final List<Integer> indices = new ArrayList<>();
+public class VertexBuilder<T> {
+    public final VertexFormat<T> format;
 
-    private int stride = 0;
-    private int indexOffset = 0;
+    private final List<T> vertices = new ArrayList<>();
+    private final List<Integer> indices = new ArrayList<>();
 
-    public void vertex(VertexAttribute... attributes) {
-        this.vertices.add(attributes);
-
-        if (this.vertices.size() == 1) {
-            for (VertexAttribute attribute : attributes) {
-                this.stride += attribute.size();
-            }
-        }
+    public VertexBuilder(VertexFormat<T> format) {
+        this.format = format;
     }
 
-    public void triangle(int i0, int i1, int i2) {
-        this.indices.addAll(List.of(indexOffset + i0, indexOffset + i1, indexOffset + i2));
-    }
-
-    public ByteBuffer getVertexBuffer() {
-        ByteBuffer buffer = BufferUtils.createByteBuffer(this.vertices.size() * this.stride);
-
-        for (VertexAttribute[] attributePack : this.vertices) {
-            for (VertexAttribute attribute : attributePack) {
-                attribute.toBuffer(buffer);
+    public ByteBuffer getVertices(ByteBuffer buffer) {
+        for (T data : this.vertices) {
+            for (VertexFormat.Attribute<T, Object> attribute : (VertexFormat.Attribute<T, Object>[]) format.attributes) {
+                attribute.type().consumer().accept(attribute.getter().apply(data), buffer);
             }
         }
-
-        buffer.flip();
-
         return buffer;
     }
 
-    public IntBuffer getIndexBuffer() {
-        IntBuffer buffer = BufferUtils.createIntBuffer(this.indices.size());
-
-        for (int index : this.indices) {
-            buffer.put(index);
+    public ByteBuffer getIndices(ByteBuffer buffer) {
+        for (Integer index : this.indices) {
+            buffer.putInt(index);
         }
-
-        buffer.flip();
-
         return buffer;
     }
 
-    public void enableVertexAttributes() {
-        long offset = 0;
-        int index = 0;
-
-        for (VertexAttribute attribute : this.vertices.get(0)) {
-            attribute.apply(index, this.stride, offset);
-
-            offset += attribute.size();
-            index++;
-        }
+    public ByteBuffer createVertexBuffer() {
+        ByteBuffer buffer = BufferUtils.createByteBuffer(vertices.size() * format.stride);
+        this.getVertices(buffer);
+        buffer.flip();
+        return buffer;
     }
 
-    public void nextOffset(int offset) {
-        this.indexOffset += offset;
+    public ByteBuffer createIndexBuffer() {
+        ByteBuffer buffer = BufferUtils.createByteBuffer(indices.size() * Integer.BYTES);
+        this.getIndices(buffer);
+        buffer.flip();
+        return buffer;
     }
 
-    public void clear() {
-        this.vertices.clear();
-        this.indices.clear();
+    public VertexBuilder<T> quad(T d1, T d2, T d3, T d4) {
+        int nextIndex = vertices.size();
 
-        this.stride = 0;
-        this.indexOffset = 0;
+        this.vertices.add(d1);
+        this.vertices.add(d2);
+        this.vertices.add(d3);
+        this.vertices.add(d4);
+
+        this.indices.add(nextIndex);
+        this.indices.add(nextIndex + 1);
+        this.indices.add(nextIndex + 3);
+
+        this.indices.add(nextIndex + 1);
+        this.indices.add(nextIndex + 2);
+        this.indices.add(nextIndex + 3);
+
+        return this;
+    }
+
+    public int indexCount() {
+        return this.indices.size();
     }
 }

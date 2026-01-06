@@ -103,9 +103,9 @@ public class Javarune implements AutoCloseable {
         ctx.drawText("`abcdefghijklmno", 50, 200, Pixel.WHITE);
         ctx.drawText("pqrstuvwxyz{|}` ", 50, 220, Pixel.WHITE);
 
-        this.viewport.disableScissors();
+        Renderer.drawElements(ctx.elements);
 
-        Renderer.drawElement(ctx.elements);
+        this.viewport.disableScissors();
     }
 
     @Override
