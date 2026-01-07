@@ -32,8 +32,7 @@ public record Pixel(int red, int green, int blue, int alpha) {
         return (this.alpha << 24) | (this.red << 16) | (this.green << 8) | this.blue;
     }
 
-    public ByteBuffer put(ByteBuffer buffer) {
+    public void put(ByteBuffer buffer) {
         buffer.putFloat(this.red / 255f).putFloat(this.green / 255f).putFloat(this.blue / 255f).putFloat(this.alpha / 255f);
-        return buffer;
     }
 }

@@ -8,6 +8,7 @@ import org.lwjgl.opengl.GL33;
 import ua.mazik.delta.GLFWWindow;
 import ua.mazik.delta.renderer.draw.DrawElement;
 import ua.mazik.delta.renderer.vertex.VertexFormat;
+import ua.mazik.delta.renderer.vertex.VertexType;
 import ua.mazik.delta.util.Pixel;
 
 import java.nio.FloatBuffer;
@@ -16,7 +17,6 @@ import java.util.List;
 public class Renderer {
     private static final FloatBuffer projectionMatrixBuffer = BufferUtils.createFloatBuffer(16);
     private static boolean initialized = false;
-    private static GLFWWindow currentWindow;
     private static int vao;
     private static int vbo;
     private static int ebo;
@@ -28,8 +28,6 @@ public class Renderer {
     public static void init(GLFWWindow window) {
         if (initialized) return;
 
-        currentWindow = window;
-
         GLFW.glfwMakeContextCurrent(window.handle);
         GL.createCapabilities();
 
@@ -39,6 +37,8 @@ public class Renderer {
 
         GL33.glEnable(GL33.GL_BLEND);
         GL33.glBlendFunc(GL33.GL_SRC_ALPHA, GL33.GL_ONE_MINUS_SRC_ALPHA);
+
+        GL33.glBindVertexArray(vao);
 
         initialized = true;
     }
@@ -70,10 +70,9 @@ public class Renderer {
         projection.get(projectionMatrixBuffer);
     }
 
+    @SuppressWarnings("unchecked")
     public static void drawElements(List<DrawElement<?>> elements) {
         assertIsInitialized();
-
-        GL33.glBindVertexArray(vao);
 
         DrawElement<?> previous = null;
         VertexBuilder<?> builder = null;
@@ -81,13 +80,11 @@ public class Renderer {
         for (DrawElement<?> element : elements) {
             VertexFormat<?> format = element.format();
 
-            if (builder == null) {
-                builder = new VertexBuilder<>(format);
-            } else if (previous.format() != format) {
+            if (builder == null || previous.format() != format) {
                 builder = new VertexBuilder<>(format);
             }
 
-            if (previous != null && ((DrawElement<Object>) element).isDirty((DrawElement<Object>) previous)) {
+            if (previous != null && element.isDirty(previous)) {
                 drawElement(previous, builder);
                 builder = new VertexBuilder<>(format);
             }
@@ -109,20 +106,20 @@ public class Renderer {
 
         if (lastFormat != element.format()) {
             if (lastFormat == null) {
-                for (int i = 0; i < element.format().attributes.length; i++) {
+                for (int i = 0; i < element.format().attributes.size(); i++) {
                     GL33.glEnableVertexAttribArray(i);
                 }
             } else {
-                if (lastFormat.attributes.length > element.format().attributes.length) {
-                    int difference = lastFormat.attributes.length - element.format().attributes.length;
+                if (lastFormat.attributes.size() > element.format().attributes.size()) {
+                    int difference = lastFormat.attributes.size() - element.format().attributes.size();
 
-                    for (int i = difference; i < lastFormat.attributes.length; i++) {
+                    for (int i = difference; i < lastFormat.attributes.size(); i++) {
                         GL33.glDisableVertexAttribArray(i);
                     }
-                } else if (lastFormat.attributes.length < element.format().attributes.length) {
-                    int difference = element.format().attributes.length - lastFormat.attributes.length;
+                } else if (lastFormat.attributes.size() < element.format().attributes.size()) {
+                    int difference = element.format().attributes.size() - lastFormat.attributes.size();
 
-                    for (int i = difference; i < lastFormat.attributes.length; i++) {
+                    for (int i = difference; i < element.format().attributes.size(); i++) {
                         GL33.glEnableVertexAttribArray(i);
                     }
                 }
@@ -133,15 +130,15 @@ public class Renderer {
         int offset = 0;
 
         for (VertexFormat.Attribute<?, ?> attribute : element.format().attributes) {
-            VertexFormat.Type<?> type = attribute.type();
+            VertexType<?> type = attribute.type();
 
-            if (type.integer()) {
-                GL33.glVertexAttribIPointer(index, type.components(), type.glType(), element.format().stride, offset);
+            if (type.isInteger()) {
+                GL33.glVertexAttribIPointer(index, type.size(), type.glType(), element.format().stride, offset);
             } else {
-                GL33.glVertexAttribPointer(index, type.components(), type.glType(), attribute.normalized(), element.format().stride, offset);
+                GL33.glVertexAttribPointer(index, type.size(), type.glType(), attribute.normalized(), element.format().stride, offset);
             }
             index++;
-            offset += type.components() * type.byteSize();
+            offset += type.size() * type.byteSize();
         }
 
         element.bind();

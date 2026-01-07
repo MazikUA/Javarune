@@ -17,37 +17,27 @@ public class VertexBuilder<T> {
         this.format = format;
     }
 
-    public ByteBuffer getVertices(ByteBuffer buffer) {
-        for (T data : this.vertices) {
-            for (VertexFormat.Attribute<T, Object> attribute : (VertexFormat.Attribute<T, Object>[]) format.attributes) {
-                attribute.type().consumer().accept(attribute.getter().apply(data), buffer);
-            }
-        }
-        return buffer;
-    }
-
-    public ByteBuffer getIndices(ByteBuffer buffer) {
-        for (Integer index : this.indices) {
-            buffer.putInt(index);
-        }
-        return buffer;
-    }
-
     public ByteBuffer createVertexBuffer() {
         ByteBuffer buffer = BufferUtils.createByteBuffer(vertices.size() * format.stride);
-        this.getVertices(buffer);
-        buffer.flip();
-        return buffer;
+
+        for (T data : this.vertices) {
+            this.format.put(buffer, data);
+        }
+
+        return buffer.flip();
     }
 
     public ByteBuffer createIndexBuffer() {
         ByteBuffer buffer = BufferUtils.createByteBuffer(indices.size() * Integer.BYTES);
-        this.getIndices(buffer);
-        buffer.flip();
-        return buffer;
+
+        for (Integer index : this.indices) {
+            buffer.putInt(index);
+        }
+
+        return buffer.flip();
     }
 
-    public VertexBuilder<T> quad(T d1, T d2, T d3, T d4) {
+    public void quad(T d1, T d2, T d3, T d4) {
         int nextIndex = vertices.size();
 
         this.vertices.add(d1);
@@ -63,7 +53,6 @@ public class VertexBuilder<T> {
         this.indices.add(nextIndex + 2);
         this.indices.add(nextIndex + 3);
 
-        return this;
     }
 
     public int indexCount() {

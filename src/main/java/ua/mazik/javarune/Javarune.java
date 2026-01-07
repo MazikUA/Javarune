@@ -96,12 +96,12 @@ public class Javarune implements AutoCloseable {
                 219, 24
         );
 
-        ctx.drawText(" !\"#$%&'()*+,-./", 50, 120, Pixel.WHITE);
-        ctx.drawText("0123456789:;<=>?", 50, 140, Pixel.WHITE);
-        ctx.drawText("@ABCDEFGHIJKLMNO", 50, 160, Pixel.WHITE);
-        ctx.drawText("PQRSTUVWXYZ[\\]^_", 50, 180, Pixel.WHITE);
-        ctx.drawText("`abcdefghijklmno", 50, 200, Pixel.WHITE);
-        ctx.drawText("pqrstuvwxyz{|}` ", 50, 220, Pixel.WHITE);
+        ctx.drawText(" !\"#$%&'()*+,-./", 50, 120, Pixel.rgb(0x00AEFF));
+        ctx.drawText("0123456789:;<=>?", 50, 140, Pixel.rgb(0x00AEFF));
+        ctx.drawText("@ABCDEFGHIJKLMNO", 50, 160, Pixel.rgb(0x00AEFF));
+        ctx.drawText("PQRSTUVWXYZ[\\]^_", 50, 180, Pixel.rgb(0x00AEFF));
+        ctx.drawText("`abcdefghijklmno", 50, 200, Pixel.rgb(0x00AEFF));
+        ctx.drawText("pqrstuvwxyz{|}` ", 50, 220, Pixel.rgb(0x00AEFF));
 
         Renderer.drawElements(ctx.elements);
 

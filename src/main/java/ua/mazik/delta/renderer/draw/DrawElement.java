@@ -9,5 +9,5 @@ public interface DrawElement<T> extends Bindable {
 
     void build(VertexBuilder<T> builder);
 
-    boolean isDirty(DrawElement<T> previous);
+    boolean isDirty(DrawElement<?> previous);
 }

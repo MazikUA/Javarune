@@ -26,7 +26,7 @@ public record TextureDrawElement(Texture texture, Shader shader, int x, int y, i
     }
 
     @Override
-    public boolean isDirty(DrawElement<TextureVertexData> previous) {
+    public boolean isDirty(DrawElement<?> previous) {
         if (previous instanceof TextureDrawElement drawElement) {
             return drawElement.texture != this.texture || drawElement.shader != this.shader;
         }

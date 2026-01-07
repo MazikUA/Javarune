@@ -1,7 +1,7 @@
 package ua.mazik.delta.renderer;
 
+import org.jspecify.annotations.NonNull;
 import org.lwjgl.opengl.GL33;
-import ua.mazik.delta.renderer.vertex.VertexFormat;
 import ua.mazik.delta.util.Bindable;
 
 public class Shader implements Bindable, AutoCloseable {
@@ -38,12 +38,13 @@ public class Shader implements Bindable, AutoCloseable {
         GL33.glUseProgram(0);
     }
 
-    public <T> void verify(VertexFormat<T> format) {
-
-    }
-
     @Override
     public void close() {
         GL33.glDeleteProgram(this.program);
+    }
+
+    @FunctionalInterface
+    public interface Getter {
+        @NonNull Shader get();
     }
 }
