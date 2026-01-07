@@ -9,12 +9,12 @@ import java.util.function.Function;
 
 public class VertexFormat<T> {
     public final List<Attribute<T, ?>> attributes;
-    public final Shader.Getter shader;
+    public final Shader shader;
     public final boolean blend;
 
     public final int stride;
 
-    public VertexFormat(List<Attribute<T, ?>> attributes, Shader.Getter shader, boolean blend) {
+    public VertexFormat(List<Attribute<T, ?>> attributes, Shader shader, boolean blend) {
         this.attributes = attributes;
         this.shader = shader;
         this.blend = blend;
@@ -39,9 +39,7 @@ public class VertexFormat<T> {
     public static class Builder<T> {
         private final List<Attribute<T, ?>> attributes = new ArrayList<>();
 
-        private Shader.Getter shader = () -> {
-            throw new RuntimeException();
-        };
+        private Shader shader;
         private boolean blend;
 
         public <R> Builder<T> attribute(String name, VertexType<R> type, boolean normalized, Function<T, R> getter) {
@@ -53,7 +51,7 @@ public class VertexFormat<T> {
             return this.attribute(name, type, false, getter);
         }
 
-        public Builder<T> shader(Shader.Getter shader) {
+        public Builder<T> shader(Shader shader) {
             this.shader = shader;
             return this;
         }

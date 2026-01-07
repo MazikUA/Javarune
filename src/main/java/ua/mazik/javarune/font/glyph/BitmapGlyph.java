@@ -4,7 +4,7 @@ import ua.mazik.delta.util.Pixel;
 import ua.mazik.delta.util.Pixmap;
 import ua.mazik.delta.util.TextureAtlas;
 import ua.mazik.javarune.render.RenderContext;
-import ua.mazik.javarune.render.Shaders;
+import ua.mazik.javarune.shader.Shaders;
 
 public record BitmapGlyph(Pixmap pixmap, String regionName, int u, int v, int width, int height) implements Glyph {
     @Override

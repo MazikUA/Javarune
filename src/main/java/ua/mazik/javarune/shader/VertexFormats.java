@@ -2,7 +2,6 @@ package ua.mazik.javarune.shader;
 
 import ua.mazik.delta.renderer.vertex.VertexFormat;
 import ua.mazik.delta.renderer.vertex.VertexType;
-import ua.mazik.javarune.render.Shaders;
 import ua.mazik.javarune.shader.data.TextureVertexData;
 
 public class VertexFormats {

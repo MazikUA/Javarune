@@ -15,21 +15,21 @@ import java.util.List;
 public class RenderContext {
     public final List<DrawElement<?>> elements = new ArrayList<>();
 
-    public void drawTexture(String texture, Shader.Getter shaderSupplier, int x, int y, int u0, int v0, int u1, int v1, int width, int height) {
+    public void drawTexture(String texture, Shader shaderSupplier, int x, int y, int u0, int v0, int u1, int v1, int width, int height) {
         this.drawTexture(Javarune.texture(texture), shaderSupplier, x, y, u0, v0, u1, v1, width, height);
     }
 
-    public void drawTexture(Texture texture, Shader.Getter shaderSupplier, int x, int y, int u0, int v0, int u1, int v1, int width, int height) {
+    public void drawTexture(Texture texture, Shader shaderSupplier, int x, int y, int u0, int v0, int u1, int v1, int width, int height) {
         this.drawTexture(texture, shaderSupplier, x, y, u0, v0, u1, v1, width, height, Pixel.WHITE, Pixel.WHITE, Pixel.WHITE, Pixel.WHITE);
     }
 
-    public void drawTexture(Texture texture, Shader.Getter shaderSupplier, int x, int y, int u0, int v0, int u1, int v1, int width, int height, Pixel color) {
+    public void drawTexture(Texture texture, Shader shaderSupplier, int x, int y, int u0, int v0, int u1, int v1, int width, int height, Pixel color) {
         this.drawTexture(texture, shaderSupplier, x, y, u0, v0, u1, v1, width, height, color, color, color, color);
     }
 
-    public void drawTexture(Texture texture, Shader.Getter shaderSupplier, int x, int y, int u0, int v0, int u1, int v1, int width, int height, Pixel topLeftColor, Pixel topRightColor, Pixel bottomRightColor, Pixel bottomLeftColor) {
+    public void drawTexture(Texture texture, Shader shaderSupplier, int x, int y, int u0, int v0, int u1, int v1, int width, int height, Pixel topLeftColor, Pixel topRightColor, Pixel bottomRightColor, Pixel bottomLeftColor) {
         this.elements.add(
-                new TextureDrawElement(texture, shaderSupplier.get(), x, y, u0, v0, u1, v1, width, height, topLeftColor, topRightColor, bottomRightColor, bottomLeftColor)
+                new TextureDrawElement(texture, shaderSupplier, x, y, u0, v0, u1, v1, width, height, topLeftColor, topRightColor, bottomRightColor, bottomLeftColor)
         );
     }
 

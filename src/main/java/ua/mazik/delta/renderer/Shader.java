@@ -1,6 +1,5 @@
 package ua.mazik.delta.renderer;
 
-import org.jspecify.annotations.NonNull;
 import org.lwjgl.opengl.GL33;
 import ua.mazik.delta.util.Bindable;
 
@@ -41,10 +40,5 @@ public class Shader implements Bindable, AutoCloseable {
     @Override
     public void close() {
         GL33.glDeleteProgram(this.program);
-    }
-
-    @FunctionalInterface
-    public interface Getter {
-        @NonNull Shader get();
     }
 }

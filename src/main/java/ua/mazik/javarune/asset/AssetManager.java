@@ -38,6 +38,16 @@ public class AssetManager implements AutoCloseable {
         return Optional.empty();
     }
 
+    public List<String> listAssets(String path, String suffix) {
+        List<String> assets = new ArrayList<>();
+
+        for (AssetSource source : sources) {
+            assets.addAll(source.listAssets(path, suffix));
+        }
+
+        return assets;
+    }
+
     @Override
     public void close() {
         this.loaders.forEach(AssetLoader::close);

@@ -5,6 +5,7 @@ import org.lwjgl.glfw.GLFW;
 import ua.mazik.delta.GLFWWindow;
 import ua.mazik.delta.audio.Sound;
 import ua.mazik.delta.renderer.Renderer;
+import ua.mazik.delta.renderer.Shader;
 import ua.mazik.delta.renderer.Texture;
 import ua.mazik.delta.renderer.Viewport;
 import ua.mazik.delta.util.Pixel;
@@ -16,7 +17,7 @@ import ua.mazik.javarune.asset.loader.TextureLoader;
 import ua.mazik.javarune.asset.source.JarAssetSource;
 import ua.mazik.javarune.font.Font;
 import ua.mazik.javarune.render.RenderContext;
-import ua.mazik.javarune.render.Shaders;
+import ua.mazik.javarune.shader.Shaders;
 
 public class Javarune implements AutoCloseable {
     private static Javarune instance;
@@ -70,6 +71,10 @@ public class Javarune implements AutoCloseable {
 
     public static @NonNull Font font(@NonNull String path) {
         return getInstance().fontLoader.get(path);
+    }
+
+    public static @NonNull Shader shader(@NonNull String path) {
+        return getInstance().shaderLoader.get(path);
     }
 
     public static void playSound(@NonNull String path) {

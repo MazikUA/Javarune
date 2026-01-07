@@ -3,7 +3,7 @@ package ua.mazik.javarune.font.glyph;
 import ua.mazik.delta.util.Pixel;
 import ua.mazik.delta.util.TextureAtlas;
 import ua.mazik.javarune.render.RenderContext;
-import ua.mazik.javarune.render.Shaders;
+import ua.mazik.javarune.shader.Shaders;
 
 /**
  * DRIVING IN MY CAR

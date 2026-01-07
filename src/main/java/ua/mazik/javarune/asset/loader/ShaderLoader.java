@@ -5,14 +5,12 @@ import ua.mazik.delta.renderer.Shader;
 import ua.mazik.javarune.asset.AssetLoader;
 import ua.mazik.javarune.asset.AssetManager;
 
-import java.io.IOException;
 import java.io.InputStream;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
+import java.util.stream.Collectors;
 
-public class ShaderLoader extends AssetLoader<Optional<Shader>> {
-    private final Map<String, Shader> shaders = new HashMap<>();
+public class ShaderLoader extends AssetLoader<Shader> {
+    private final Map<String, Shader> loadedShaders = new HashMap<>();
 
     public ShaderLoader(@NonNull AssetManager assetManager) {
         super("shaders", assetManager);
@@ -21,50 +19,59 @@ public class ShaderLoader extends AssetLoader<Optional<Shader>> {
     @Override
     public void load() {
         this.close();
+
+        Map<String, String> vertexShaders = this.getShaders(".vsh");
+        Map<String, String> fragmentShaders = this.getShaders(".fsh");
+
+        Set<String> pairs = new HashSet<>(vertexShaders.keySet());
+        pairs.retainAll(fragmentShaders.keySet());
+
+        for (String shader : pairs) {
+            this.loadedShaders.put(shader, new Shader(vertexShaders.get(shader), fragmentShaders.get(shader)));
+        }
+
+        Set<String> missingFrag = new HashSet<>(fragmentShaders.keySet());
+        missingFrag.removeAll(vertexShaders.keySet());
+
+        for (String frag : missingFrag) {
+            System.out.println("[WARN] Can't find pair for \"" + frag + ".fsh\" shader (\"" + frag + ".vsh\" missing).");
+        }
+
+        Set<String> missingVert = new HashSet<>(vertexShaders.keySet());
+        missingVert.removeAll(fragmentShaders.keySet());
+
+        for (String vert : missingVert) {
+            System.out.println("[WARN] Can't find pair for \"" + vert + ".vsh\" shader (\"" + vert + ".fsh\" missing).");
+        }
+    }
+
+    private Map<String, String> getShaders(String suffix) {
+        return this.assetManager.listAssets("shaders", suffix).stream()
+                .map(path -> {
+                    Optional<InputStream> is = this.assetManager.findAsset("shaders/" + path);
+
+                    if (is.isEmpty()) return null;
+
+                    try (InputStream stream = is.get()) {
+                        String content = new String(stream.readAllBytes());
+                        return Map.entry(path.replace(suffix, ""), content);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        return null;
+                    }
+                })
+                .filter(Objects::nonNull)
+                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
     }
 
     @Override
-    public @NonNull Optional<Shader> get(@NonNull String path) {
-        Shader texture = this.shaders.get(path);
-
-        if (texture == null) {
-            Optional<InputStream> vertex = this.assetManager.findAsset("shaders/vertex/" + path + ".vsh");
-            Optional<InputStream> fragment = this.assetManager.findAsset("shaders/fragment/" + path + ".fsh");
-
-            if (fragment.isPresent() && vertex.isPresent()) {
-                String vertexString;
-                String fragmentString;
-
-                try (InputStream in = vertex.get()) {
-                    vertexString = new String(in.readAllBytes());
-                } catch (IOException e) {
-                    e.printStackTrace();
-                    return Optional.empty();
-                }
-
-                try (InputStream in = fragment.get()) {
-                    fragmentString = new String(in.readAllBytes());
-                } catch (IOException e) {
-                    e.printStackTrace();
-                    return Optional.empty();
-                }
-
-                Shader shader = new Shader(vertexString, fragmentString);
-
-                this.shaders.put(path, shader);
-
-                return Optional.of(shader);
-            }
-
-            return Optional.empty();
-        } else {
-            return Optional.of(texture);
-        }
+    public @NonNull Shader get(@NonNull String path) {
+        return this.loadedShaders.get(path);
     }
 
     @Override
     public void close() {
-        this.shaders.values().forEach(Shader::close);
-        this.shaders.clear();
+        this.loadedShaders.values().forEach(Shader::close);
+        this.loadedShaders.clear();
     }
 }
