@@ -19,7 +19,7 @@ public class Bootstrap {
 
             Javarune javarune = new Javarune(window);
 
-            window.loop(javarune::render);
+            window.loop(javarune::update);
             javarune.close();
 
             Audio.shutdown();

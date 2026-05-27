@@ -1,6 +1,7 @@
 package ua.mazik.javarune;
 
 import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 import org.lwjgl.glfw.GLFW;
 import ua.mazik.delta.GLFWWindow;
 import ua.mazik.delta.audio.Sound;
@@ -17,7 +18,8 @@ import ua.mazik.javarune.asset.loader.TextureLoader;
 import ua.mazik.javarune.asset.source.JarAssetSource;
 import ua.mazik.javarune.font.Font;
 import ua.mazik.javarune.render.RenderContext;
-import ua.mazik.javarune.shader.Shaders;
+import ua.mazik.javarune.screen.MainMenuScreen;
+import ua.mazik.javarune.screen.Screen;
 
 public class Javarune implements AutoCloseable {
     private static Javarune instance;
@@ -31,6 +33,8 @@ public class Javarune implements AutoCloseable {
     public final ShaderLoader shaderLoader;
     public final SoundLoader soundLoader;
     public final TextureLoader textureLoader;
+
+    private Screen screen;
 
     public Javarune(@NonNull GLFWWindow window) {
         instance = this;
@@ -52,6 +56,8 @@ public class Javarune implements AutoCloseable {
 
         this.assetManager.registerSource(new JarAssetSource(Javarune.class));
         this.assetManager.load();
+
+        this.setScreen(new MainMenuScreen());
 
         window.windowSizeCallback = (handle, windowWidth, windowHeight) -> {
             this.viewport.resize(windowWidth, windowHeight);
@@ -81,36 +87,22 @@ public class Javarune implements AutoCloseable {
         getInstance().soundLoader.get(path).ifPresent(Sound::play);
     }
 
-    public void render() {
+    public void update() {
         Renderer.setClearColor(Pixel.rgb(0x000000));
         Renderer.clear();
 
-        this.viewport.enableScissors();
+        if (this.screen != null) {
+            this.screen.update();
+            this.viewport.enableScissors();
 
-        Renderer.setClearColor(Pixel.rgb(0x505050));
-        Renderer.clear();
+            RenderContext ctx = new RenderContext();
 
-        RenderContext ctx = new RenderContext();
+            this.screen.render(ctx);
 
-        ctx.drawTexture(
-                "misc/logo",
-                Shaders.TEXTURE,
-                60, 60,
-                0, 0,
-                219, 24,
-                219, 24
-        );
+            Renderer.drawElements(ctx.elements);
 
-        ctx.drawText(" !\"#$%&'()*+,-./", 50, 120, Pixel.rgb(0x00AEFF));
-        ctx.drawText("0123456789:;<=>?", 50, 140, Pixel.rgb(0x00AEFF));
-        ctx.drawText("@ABCDEFGHIJKLMNO", 50, 160, Pixel.rgb(0x00AEFF));
-        ctx.drawText("PQRSTUVWXYZ[\\]^_", 50, 180, Pixel.rgb(0x00AEFF));
-        ctx.drawText("`abcdefghijklmno", 50, 200, Pixel.rgb(0x00AEFF));
-        ctx.drawText("pqrstuvwxyz{|}` ", 50, 220, Pixel.rgb(0x00AEFF));
-
-        Renderer.drawElements(ctx.elements);
-
-        this.viewport.disableScissors();
+            this.viewport.disableScissors();
+        }
     }
 
     @Override
@@ -119,5 +111,13 @@ public class Javarune implements AutoCloseable {
         this.window.close();
 
         Renderer.shutdown();
+    }
+
+    public @Nullable Screen getScreen() {
+        return this.screen;
+    }
+
+    public void setScreen(@Nullable Screen screen) {
+        this.screen = screen;
     }
 }

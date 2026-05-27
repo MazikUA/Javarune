@@ -1,14 +1,14 @@
 package ua.mazik.javarune.font.glyph;
 
-import ua.mazik.delta.util.Pixel;
 import ua.mazik.delta.util.Pixmap;
 import ua.mazik.delta.util.TextureAtlas;
+import ua.mazik.javarune.font.TextColor;
 import ua.mazik.javarune.render.RenderContext;
 import ua.mazik.javarune.shader.Shaders;
 
 public record BitmapGlyph(Pixmap pixmap, String regionName, int u, int v, int width, int height) implements Glyph {
     @Override
-    public void draw(RenderContext renderer, TextureAtlas atlas, int x, int y, Pixel color) {
+    public void draw(RenderContext renderer, TextureAtlas atlas, int x, int y, int scale, TextColor color) {
         TextureAtlas.Region region = atlas.findRegion(this.regionName);
 
         if (region == null) {
@@ -21,7 +21,7 @@ public record BitmapGlyph(Pixmap pixmap, String regionName, int u, int v, int wi
         }
 
         if (region != null) {
-            renderer.drawTexture(region.page().getTexture(), Shaders.TEXTURE, x, y, region.x(), region.y(), region.x() + region.width(), region.y() + region.height(), region.width(), region.height(), Pixel.WHITE, Pixel.WHITE, color, color);
+            renderer.drawTexture(region.page().getTexture(), Shaders.TEXTURE, x, y, region.x(), region.y(), region.x() + region.width(), region.y() + region.height(), region.width() * 2, region.height() * 2, color.top(), color.top(), color.bottom(), color.bottom());
         }
     }
 

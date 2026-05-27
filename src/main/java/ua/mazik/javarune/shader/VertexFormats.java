@@ -9,7 +9,6 @@ public class VertexFormats {
             .attribute("position", VertexType.VEC2, TextureVertexData::position)
             .attribute("uv", VertexType.VEC2, TextureVertexData::uv)
             .attribute("pixel", VertexType.PIXEL, TextureVertexData::pixel)
-            .shader(Shaders.TEXTURE)
             .blend(true)
             .build();
 }

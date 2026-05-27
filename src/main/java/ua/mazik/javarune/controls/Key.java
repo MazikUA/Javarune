@@ -17,30 +17,38 @@ public enum Key {
     MENU(GLFW.GLFW_KEY_C);
 
     private final List<Integer> glfwKeys;
-    private boolean wasDown;
+    private boolean wasPressed;
 
     Key(int... glfwKeys) {
         this.glfwKeys = Arrays.stream(glfwKeys).boxed().toList();
     }
 
+    public static List<Key> pressed() {
+        return Arrays.stream(Key.values()).filter(Key::isPressed).toList();
+    }
+
+    public static List<Key> held() {
+        return Arrays.stream(Key.values()).filter(Key::isHeld).toList();
+    }
+
     public boolean isPressed() {
         boolean down = false;
 
-        for (int glfwKey : glfwKeys) {
+        for (int glfwKey : this.glfwKeys) {
             if (GLFW.glfwGetKey(Javarune.getInstance().window.handle, glfwKey) == GLFW.GLFW_PRESS) {
                 down = true;
                 break;
             }
         }
 
-        boolean justPressed = down && !this.wasDown;
-        this.wasDown = down;
+        boolean justPressed = down && !this.wasPressed;
+        this.wasPressed = down;
 
         return justPressed;
     }
 
     public boolean isHeld() {
-        for (int glfwKey : glfwKeys) {
+        for (int glfwKey : this.glfwKeys) {
             if (GLFW.glfwGetKey(Javarune.getInstance().window.handle, glfwKey) != GLFW.GLFW_RELEASE) {
                 return true;
             }
