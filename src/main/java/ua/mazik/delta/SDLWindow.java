@@ -2,6 +2,7 @@ package ua.mazik.delta;
 
 import org.jspecify.annotations.NonNull;
 import org.lwjgl.sdl.*;
+import ua.mazik.delta.renderer.Renderer;
 
 import static org.lwjgl.sdl.SDLEvents.*;
 import static org.lwjgl.sdl.SDLVideo.*;

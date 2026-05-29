@@ -2,7 +2,6 @@ package ua.mazik.delta.renderer;
 
 import org.jspecify.annotations.NonNull;
 import org.lwjgl.sdl.*;
-import ua.mazik.delta.Renderer;
 import ua.mazik.delta.util.Pixmap;
 import ua.mazik.delta.util.SDLUtil;
 
@@ -34,6 +33,7 @@ public class Texture implements AutoCloseable {
             throw new RuntimeException();
         }
 
+        SDL_SetTextureScaleMode(this.sdlTexture, SDL_SCALEMODE_PIXELART);
         SDL_DestroySurface(surface);
     }
 

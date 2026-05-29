@@ -1,9 +1,8 @@
-package ua.mazik.delta;
+package ua.mazik.delta.renderer;
 
 import org.joml.Matrix4f;
 import org.lwjgl.BufferUtils;
-import ua.mazik.delta.renderer.Shader;
-import ua.mazik.delta.renderer.VertexBuilder;
+import ua.mazik.delta.SDLWindow;
 import ua.mazik.delta.renderer.draw.DrawElement;
 import ua.mazik.delta.renderer.vertex.VertexFormat;
 import ua.mazik.delta.util.Pixel;
@@ -41,7 +40,7 @@ public class Renderer {
         if (!initialized) throw new RuntimeException();
     }
 
-    public static void setClearColor(Pixel color) {
+    public static void setDrawColor(Pixel color) {
         assertIsInitialized();
 
         SDL_SetRenderDrawColor(

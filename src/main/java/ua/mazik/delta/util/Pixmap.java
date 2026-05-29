@@ -52,7 +52,7 @@ public class Pixmap {
         int width = surface.w();
         int height = surface.h();
 
-        ByteBuffer rawData = surface.pixels().duplicate();
+        ByteBuffer rawData = SDLUtil.clone(surface.pixels());
 
         SDL_DestroySurface(surface);
 

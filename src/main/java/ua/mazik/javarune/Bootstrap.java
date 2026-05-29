@@ -1,8 +1,8 @@
 package ua.mazik.javarune;
 
 import org.lwjgl.system.MemoryUtil;
-import ua.mazik.delta.Renderer;
 import ua.mazik.delta.SDLWindow;
+import ua.mazik.delta.renderer.Renderer;
 
 import static org.lwjgl.sdl.SDLInit.*;
 
