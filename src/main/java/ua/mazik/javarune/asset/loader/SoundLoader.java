@@ -1,7 +1,6 @@
 package ua.mazik.javarune.asset.loader;
 
 import org.jspecify.annotations.NonNull;
-import org.lwjgl.openal.AL10;
 import ua.mazik.delta.audio.Sound;
 import ua.mazik.javarune.asset.AssetLoader;
 import ua.mazik.javarune.asset.AssetManager;
@@ -42,13 +41,12 @@ public class SoundLoader extends AssetLoader<Optional<Sound>> {
                     AudioInputStream ais = AudioSystem.getAudioInputStream(in);
                     AudioFormat audioFormat = ais.getFormat();
 
-                    int format = audioFormat.getChannels() == 1 ? AL10.AL_FORMAT_MONO16 : AL10.AL_FORMAT_STEREO16;
                     byte[] bytes = ais.readAllBytes();
 
                     ByteBuffer buffer = ByteBuffer.allocateDirect(bytes.length).order(ByteOrder.nativeOrder());
                     buffer.put(bytes).flip();
 
-                    Sound newSound = new Sound(format, buffer, audioFormat);
+                    Sound newSound = new Sound(buffer, audioFormat);
 
                     this.sounds.put(path, newSound);
                     return Optional.of(newSound);

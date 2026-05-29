@@ -1,30 +1,39 @@
 package ua.mazik.delta.audio;
 
-import org.lwjgl.openal.AL10;
+import org.lwjgl.sdl.*;
 
 import javax.sound.sampled.AudioFormat;
 import java.nio.ByteBuffer;
 
+import static org.lwjgl.sdl.SDLAudio.*;
+
 public class Sound implements AutoCloseable {
-    public final int buffer;
-    public final int source;
+    public final ByteBuffer buffer;
+    public final long stream;
 
-    public Sound(int alFormat, ByteBuffer buffer, AudioFormat audioFormat) {
-        this.buffer = AL10.alGenBuffers();
+    public Sound(ByteBuffer buffer, AudioFormat audioFormat) {
+        this.buffer = buffer;
 
-        AL10.alBufferData(this.buffer, alFormat, buffer, Math.round(audioFormat.getSampleRate()));
+        SDL_AudioSpec spec = SDL_AudioSpec.create()
+                .format(SDL_AUDIO_S16)
+                .channels(audioFormat.getChannels())
+                .freq((int) audioFormat.getSampleRate());
 
-        this.source = AL10.alGenSources();
+        this.stream = SDL_OpenAudioDeviceStream(SDL_AUDIO_DEVICE_DEFAULT_PLAYBACK, spec, null, 0);
+
+        SDL_ResumeAudioStreamDevice(this.stream);
+
+        spec.close();
     }
 
     public void play() {
-        AL10.alSourcei(this.source, AL10.AL_BUFFER, this.buffer);
-        AL10.alSourcePlay(this.source);
+        SDL_ClearAudioStream(this.stream);
+
+        SDL_PutAudioStreamData(this.stream, this.buffer);
     }
 
     @Override
     public void close() {
-        AL10.alDeleteSources(this.source);
-        AL10.alDeleteBuffers(this.buffer);
+        SDL_DestroyAudioStream(this.stream);
     }
 }

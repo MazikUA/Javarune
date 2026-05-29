@@ -1,6 +1,6 @@
 package ua.mazik.javarune.shader;
 
-import ua.mazik.delta.renderer.Renderer;
+import ua.mazik.delta.Renderer;
 import ua.mazik.delta.renderer.Shader;
 import ua.mazik.delta.renderer.Texture;
 import ua.mazik.delta.renderer.VertexBuilder;
@@ -35,7 +35,6 @@ public record TextureDrawElement(Texture texture, Shader shader, int x, int y, i
 
     @Override
     public void bind() {
-        this.texture.bind();
         this.shader.bind();
 
         Renderer.applyDefaultUniforms(this.shader);
@@ -43,7 +42,6 @@ public record TextureDrawElement(Texture texture, Shader shader, int x, int y, i
 
     @Override
     public void unbind() {
-        this.texture.unbind();
         this.shader.unbind();
     }
 }

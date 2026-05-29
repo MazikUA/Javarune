@@ -114,7 +114,6 @@ public class TextureAtlas implements AutoCloseable {
 
         @Override
         public void close() {
-            this.pixmap.close();
             this.texture.close();
         }
     }

@@ -1,31 +1,17 @@
 package ua.mazik.delta.audio;
 
-import org.lwjgl.openal.AL;
-import org.lwjgl.openal.ALC;
-import org.lwjgl.openal.ALC10;
+import org.lwjgl.sdl.*;
 
-import java.nio.ByteBuffer;
-import java.nio.IntBuffer;
+import static org.lwjgl.sdl.SDLAudio.*;
 
 public class Audio {
-    private static long device;
-    private static long context;
+    public static int audioDevice;
 
     public static void init() {
-        device = ALC10.alcOpenDevice((ByteBuffer) null);
-
-        if (device == 0) {
-            throw new RuntimeException();
-        }
-
-        context = ALC10.alcCreateContext(device, (IntBuffer) null);
-        ALC10.alcMakeContextCurrent(context);
-
-        AL.createCapabilities(ALC.createCapabilities(device));
+        audioDevice = SDL_OpenAudioDevice(SDL_AUDIO_DEVICE_DEFAULT_PLAYBACK, SDL_AudioSpec.create());
     }
 
     public static void shutdown() {
-        ALC10.alcDestroyContext(context);
-        ALC10.alcCloseDevice(device);
+        SDL_CloseAudioDevice(audioDevice);
     }
 }

@@ -40,8 +40,6 @@ public class TextureLoader extends AssetLoader<Texture> {
                     Pixmap pixmap = Pixmap.fromImageBytes(bytes);
                     Texture newTexture = pixmap.toTexture();
 
-                    pixmap.close();
-
                     this.textures.put(path, newTexture);
                     return newTexture;
                 } catch (IOException e) {
