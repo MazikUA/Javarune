@@ -1,6 +1,6 @@
 package ua.mazik.javarune.shader;
 
-import ua.mazik.delta.renderer.Renderer;
+import ua.mazik.delta.Renderer;
 import ua.mazik.delta.renderer.Shader;
 import ua.mazik.delta.renderer.Texture;
 import ua.mazik.delta.renderer.VertexBuilder;

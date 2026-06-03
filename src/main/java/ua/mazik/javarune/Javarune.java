@@ -2,11 +2,12 @@ package ua.mazik.javarune;
 
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
+import ua.mazik.delta.Renderer;
 import ua.mazik.delta.SDLWindow;
 import ua.mazik.delta.audio.Sound;
-import ua.mazik.delta.renderer.Renderer;
 import ua.mazik.delta.renderer.Shader;
 import ua.mazik.delta.renderer.Texture;
+import ua.mazik.delta.renderer.Viewport;
 import ua.mazik.delta.util.Pixel;
 import ua.mazik.javarune.asset.AssetManager;
 import ua.mazik.javarune.asset.loader.FontLoader;
@@ -18,12 +19,11 @@ import ua.mazik.javarune.font.Font;
 import ua.mazik.javarune.screen.MainMenuScreen;
 import ua.mazik.javarune.screen.Screen;
 
-import static org.lwjgl.sdl.SDLRender.*;
-
 public class Javarune implements AutoCloseable {
     private static Javarune instance;
 
     public final SDLWindow window;
+    public final Viewport viewport;
 
     public final AssetManager assetManager;
 
@@ -38,9 +38,11 @@ public class Javarune implements AutoCloseable {
         instance = this;
 
         this.window = window;
+        this.viewport = new Viewport(640, 480, Viewport.Scaling.FIT_PIXEL_PERFECT);
+        this.viewport.resize(window.getWidth(), window.getHeight());
+        this.viewport.apply();
 
-        SDL_SetRenderLogicalPresentation(Renderer.address, 320, 240, SDL_LOGICAL_PRESENTATION_INTEGER_SCALE);
-        SDL_SetRenderScale(Renderer.address, 0.5f, 0.5f);
+        Renderer.setProjectionMatrix(this.viewport.projectionMatrix);
 
         this.assetManager = new AssetManager();
 
@@ -53,6 +55,11 @@ public class Javarune implements AutoCloseable {
         this.assetManager.load();
 
         this.setScreen(new MainMenuScreen());
+
+        window.windowSizeCallback = (width, height) -> {
+            this.viewport.resize(width, height);
+            this.viewport.apply();
+        };
     }
 
     public static @NonNull Javarune getInstance() {
@@ -76,13 +83,11 @@ public class Javarune implements AutoCloseable {
     }
 
     public void update() {
-        Renderer.setDrawColor(Pixel.rgb(0x000000));
+        Renderer.setClearColor(Pixel.rgb(0x000000));
         Renderer.clear();
 
-        if (this.screen != null) {
-            this.screen.update();
-            this.screen.render();
-        }
+        Renderer.setClearColor(Pixel.rgb(0xFF0000));
+        this.viewport.drawFillRect();
     }
 
     @Override
