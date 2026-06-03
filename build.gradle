@@ -15,7 +15,6 @@ dependencies {
 
     implementation(libs.lwjgl)
     implementation(libs.lwjgl.sdl)
-    implementation(libs.lwjgl.spng)
 
     implementation(libs.lwjgl) {
         artifact {
@@ -23,11 +22,6 @@ dependencies {
         }
     }
     implementation(libs.lwjgl.sdl) {
-        artifact {
-            classifier = "natives-windows"
-        }
-    }
-    implementation(libs.lwjgl.spng) {
         artifact {
             classifier = "natives-windows"
         }

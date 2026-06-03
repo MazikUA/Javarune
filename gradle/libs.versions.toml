@@ -9,7 +9,6 @@ lwjgl-bom = { module = "org.lwjgl:lwjgl-bom", version.ref = "lwjgl" }
 
 lwjgl = { module = "org.lwjgl:lwjgl" }
 lwjgl-sdl = { module = "org.lwjgl:lwjgl-sdl" }
-lwjgl-spng = { module = "org.lwjgl:lwjgl-spng" }
 
 jspecify = { module = "org.jspecify:jspecify", version.ref = "jspecify" }
 

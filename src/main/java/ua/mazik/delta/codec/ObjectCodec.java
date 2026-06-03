@@ -6,7 +6,7 @@ import java.util.function.BiConsumer;
 import java.util.function.Function;
 
 public interface ObjectCodec<T> {
-    static <T> ObjectCodec<T> of(Function<JsonObject, ? extends T> decoder, BiConsumer<T, JsonObject> encoder) {
+    static <T> ObjectCodec<T> of(Function<JsonObject, T> decoder, BiConsumer<T, JsonObject> encoder) {
         return new ObjectCodec<>() {
             @Override
             public T decode(JsonObject object) {
@@ -26,12 +26,12 @@ public interface ObjectCodec<T> {
 
     default Codec<T> toCodec() {
         return Codec.of(
-            json -> this.decode(json.getAsJsonObject()),
-            value -> {
-                JsonObject object = new JsonObject();
-                this.encode(value, object);
-                return object;
-            }
+                json -> this.decode(json.getAsJsonObject()),
+                value -> {
+                    JsonObject object = new JsonObject();
+                    this.encode(value, object);
+                    return object;
+                }
         );
     }
 

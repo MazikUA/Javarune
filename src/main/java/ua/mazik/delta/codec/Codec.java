@@ -10,7 +10,7 @@ import java.util.Optional;
 import java.util.function.Function;
 
 public interface Codec<T> {
-    static <T> Codec<T> of(Function<JsonElement, ? extends T> decoder, Function<T, ? extends JsonElement> encoder) {
+    static <T> Codec<T> of(Function<JsonElement, T> decoder, Function<T, JsonElement> encoder) {
         return new Codec<>() {
             @Override
             public T decode(JsonElement json) {
@@ -30,38 +30,38 @@ public interface Codec<T> {
 
     default Codec<Optional<T>> optional() {
         return of(
-            json -> json == null || json.isJsonNull() ? Optional.empty() : Optional.of(this.decode(json)),
-            optional -> optional.map(this::encode).orElse(JsonNull.INSTANCE)
+                json -> json == null || json.isJsonNull() ? Optional.empty() : Optional.of(this.decode(json)),
+                optional -> optional.map(this::encode).orElse(JsonNull.INSTANCE)
         );
     }
 
     default Codec<T> optional(T defaultValue) {
         return of(
-            json -> json == null || json.isJsonNull() ? defaultValue : this.decode(json),
-            this::encode
+                json -> json == null || json.isJsonNull() ? defaultValue : this.decode(json),
+                this::encode
         );
     }
 
     default Codec<List<T>> list() {
         return of(
-            json -> {
-                List<T> list = new ArrayList<>();
+                json -> {
+                    ArrayList<T> list = new ArrayList<>();
 
-                for (JsonElement element : json.getAsJsonArray()) {
-                    list.add(this.decode(element));
+                    for (JsonElement element : json.getAsJsonArray()) {
+                        list.add(this.decode(element));
+                    }
+
+                    return list;
+                },
+                list -> {
+                    JsonArray array = new JsonArray();
+
+                    for (T value : list) {
+                        array.add(this.encode(value));
+                    }
+
+                    return array;
                 }
-
-                return list;
-            },
-            list -> {
-                JsonArray array = new JsonArray();
-
-                for (T value : list) {
-                    array.add(this.encode(value));
-                }
-
-                return array;
-            }
         );
     }
 
@@ -71,8 +71,8 @@ public interface Codec<T> {
 
     default <U> Codec<U> map(Function<T, U> decoder, Function<U, T> encoder) {
         return of(
-            json -> decoder.apply(this.decode(json)),
-            value -> this.encode(encoder.apply(value))
+                json -> decoder.apply(this.decode(json)),
+                value -> this.encode(encoder.apply(value))
         );
     }
 
