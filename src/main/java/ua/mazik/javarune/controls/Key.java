@@ -1,20 +1,20 @@
 package ua.mazik.javarune.controls;
 
+import org.lwjgl.glfw.GLFW;
+import ua.mazik.javarune.Javarune;
+
 import java.util.Arrays;
 import java.util.List;
 
-import static org.lwjgl.sdl.SDLKeyboard.*;
-import static org.lwjgl.sdl.SDLScancode.*;
-
 public enum Key {
-    RIGHT(SDL_SCANCODE_RIGHT),
-    LEFT(SDL_SCANCODE_LEFT),
-    DOWN(SDL_SCANCODE_DOWN),
-    UP(SDL_SCANCODE_UP),
+    RIGHT(GLFW.GLFW_KEY_RIGHT),
+    LEFT(GLFW.GLFW_KEY_LEFT),
+    DOWN(GLFW.GLFW_KEY_DOWN),
+    UP(GLFW.GLFW_KEY_UP),
 
-    CONFIRM(SDL_SCANCODE_Z),
-    CANCEL(SDL_SCANCODE_X),
-    MENU(SDL_SCANCODE_C);
+    CONFIRM(GLFW.GLFW_KEY_Z),
+    CANCEL(GLFW.GLFW_KEY_X),
+    MENU(GLFW.GLFW_KEY_C);
 
     private final List<Integer> glfwKeys;
     private boolean wasPressed;
@@ -35,7 +35,7 @@ public enum Key {
         boolean down = false;
 
         for (int glfwKey : this.glfwKeys) {
-            if (isKeyDown(glfwKey)) {
+            if (GLFW.glfwGetKey(Javarune.getInstance().window.handle, glfwKey) == GLFW.GLFW_PRESS) {
                 down = true;
                 break;
             }
@@ -49,14 +49,10 @@ public enum Key {
 
     public boolean isHeld() {
         for (int glfwKey : this.glfwKeys) {
-            if (isKeyDown(glfwKey)) {
+            if (GLFW.glfwGetKey(Javarune.getInstance().window.handle, glfwKey) != GLFW.GLFW_RELEASE) {
                 return true;
             }
         }
         return false;
-    }
-
-    private boolean isKeyDown(int scancode) {
-        return SDL_GetKeyboardState().get(scancode) != 0;
     }
 }

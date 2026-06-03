@@ -1,5 +1,7 @@
 package ua.mazik.javarune.screen;
 
+import ua.mazik.delta.renderer.Renderer;
+import ua.mazik.delta.util.Pixel;
 import ua.mazik.javarune.Javarune;
 import ua.mazik.javarune.controls.Key;
 import ua.mazik.javarune.font.TextColor;

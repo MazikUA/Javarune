@@ -1,11 +1,7 @@
 package ua.mazik.delta.renderer;
 
 import org.joml.Matrix4f;
-import org.lwjgl.sdl.*;
-import ua.mazik.delta.Renderer;
-import ua.mazik.delta.util.SDLUtil;
-
-import static org.lwjgl.sdl.SDLRender.*;
+import org.lwjgl.opengl.GL33;
 
 public class Viewport {
     public final Scaling scaling;
@@ -26,31 +22,16 @@ public class Viewport {
     }
 
     public void apply() {
-        SDLUtil.withStack(SDL_Rect::malloc, (rect) -> {
-            rect.set(this.x, this.y, this.width, this.height);
-
-            SDL_SetRenderViewport(Renderer.address, rect);
-        });
+        GL33.glViewport(this.x, this.y, this.width, this.height);
     }
 
     public void enableScissors() {
-        SDLUtil.withStack(SDL_Rect::malloc, (rect) -> {
-            rect.set(this.x, this.y, this.width, this.height);
-
-            SDL_SetRenderClipRect(Renderer.address, rect);
-        });
+        GL33.glEnable(GL33.GL_SCISSOR_TEST);
+        GL33.glScissor(this.x, this.y, this.width, this.height);
     }
 
     public void disableScissors() {
-        SDL_SetRenderClipRect(Renderer.address, null);
-    }
-
-    public void drawFillRect() {
-        SDLUtil.withStack(SDL_FRect::malloc, (rect) -> {
-            rect.set(0, 0, this.width, this.height);
-
-            SDL_RenderFillRect(Renderer.address, rect);
-        });
+        GL33.glDisable(GL33.GL_SCISSOR_TEST);
     }
 
     public void resize(int windowWidth, int windowHeight) {

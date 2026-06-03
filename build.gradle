@@ -14,14 +14,32 @@ dependencies {
     implementation platform(libs.lwjgl.bom)
 
     implementation(libs.lwjgl)
-    implementation(libs.lwjgl.sdl)
+    implementation(libs.lwjgl.glfw)
+    implementation(libs.lwjgl.openal)
+    implementation(libs.lwjgl.opengl)
+    implementation(libs.lwjgl.stb)
 
     implementation(libs.lwjgl) {
         artifact {
             classifier = "natives-windows"
         }
     }
-    implementation(libs.lwjgl.sdl) {
+    implementation(libs.lwjgl.glfw) {
+        artifact {
+            classifier = "natives-windows"
+        }
+    }
+    implementation(libs.lwjgl.openal) {
+        artifact {
+            classifier = "natives-windows"
+        }
+    }
+    implementation(libs.lwjgl.opengl) {
+        artifact {
+            classifier = "natives-windows"
+        }
+    }
+    implementation(libs.lwjgl.stb) {
         artifact {
             classifier = "natives-windows"
         }

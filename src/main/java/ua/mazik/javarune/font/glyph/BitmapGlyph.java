@@ -15,6 +15,7 @@ public record BitmapGlyph(Pixmap pixmap, String regionName, int u, int v, int wi
             Pixmap characterPixmap = new Pixmap(this.width, this.height);
             characterPixmap.drawPixmap(0, 0, this.u, this.v, this.width, this.height, this.pixmap);
             atlas.add(this.regionName, characterPixmap);
+            characterPixmap.close();
 
             region = atlas.findRegion(this.regionName);
         }

@@ -1,29 +1,33 @@
 package ua.mazik.javarune;
 
+import org.lwjgl.glfw.GLFW;
+import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.system.MemoryUtil;
-import ua.mazik.delta.Renderer;
-import ua.mazik.delta.SDLWindow;
-
-import static org.lwjgl.sdl.SDLInit.*;
+import ua.mazik.delta.GLFWWindow;
+import ua.mazik.delta.audio.Audio;
 
 public class Bootstrap {
     public static void main(String[] args) {
-        if (!SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO)) {
-            return;
-        }
+        //noinspection unused
+        try (GLFWErrorCallback callback = GLFWErrorCallback.create(Bootstrap::logError).set()) {
+            if (!GLFW.glfwInit()) {
+                return;
+            }
 
-        try (SDLWindow window = new SDLWindow(640, 480, "Javarune")) {
-            Renderer.init(window);
+            GLFWWindow window = new GLFWWindow(640, 480, "Javarune");
+            Audio.init();
 
             Javarune javarune = new Javarune(window);
 
-            window.show();
             window.loop(javarune::update);
-
             javarune.close();
-        }
 
-        SDL_Quit();
+            Audio.shutdown();
+
+            //noinspection resource
+            GLFW.glfwSetErrorCallback(null);
+            GLFW.glfwTerminate();
+        }
     }
 
     private static void logError(int error, long description) {

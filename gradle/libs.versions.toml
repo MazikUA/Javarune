@@ -1,5 +1,5 @@
 [versions]
-lwjgl = "3.4.1"
+lwjgl = "3.3.6"
 jspecify = "1.0.0"
 gson = "2.13.1"
 joml = "1.10.8"
@@ -8,7 +8,10 @@ joml = "1.10.8"
 lwjgl-bom = { module = "org.lwjgl:lwjgl-bom", version.ref = "lwjgl" }
 
 lwjgl = { module = "org.lwjgl:lwjgl" }
-lwjgl-sdl = { module = "org.lwjgl:lwjgl-sdl" }
+lwjgl-glfw = { module = "org.lwjgl:lwjgl-glfw" }
+lwjgl-openal = { module = "org.lwjgl:lwjgl-openal" }
+lwjgl-opengl = { module = "org.lwjgl:lwjgl-opengl" }
+lwjgl-stb = { module = "org.lwjgl:lwjgl-stb" }
 
 jspecify = { module = "org.jspecify:jspecify", version.ref = "jspecify" }
 

@@ -1,52 +1,53 @@
 package ua.mazik.delta.renderer;
 
 import org.jspecify.annotations.NonNull;
-import org.lwjgl.sdl.*;
-import ua.mazik.delta.Renderer;
+import org.lwjgl.opengl.GL33;
+import ua.mazik.delta.util.Bindable;
 import ua.mazik.delta.util.Pixmap;
-import ua.mazik.delta.util.SDLUtil;
 
 import java.nio.ByteBuffer;
 
-import static org.lwjgl.sdl.SDLPixels.*;
-import static org.lwjgl.sdl.SDLRender.*;
-import static org.lwjgl.sdl.SDLSurface.*;
+public class Texture implements Bindable, AutoCloseable {
+    public final int id;
 
-public class Texture implements AutoCloseable {
     public final int width;
     public final int height;
 
-    public final SDL_Texture sdlTexture;
-
     public Texture(int width, int height, ByteBuffer buffer) {
+        this.id = GL33.glGenTextures();
+
+        this.bind();
+
+        GL33.glTexParameteri(GL33.GL_TEXTURE_2D, GL33.GL_TEXTURE_MIN_FILTER, GL33.GL_NEAREST);
+        GL33.glTexParameteri(GL33.GL_TEXTURE_2D, GL33.GL_TEXTURE_MAG_FILTER, GL33.GL_NEAREST);
+        GL33.glTexImage2D(GL33.GL_TEXTURE_2D, 0, GL33.GL_RGBA8, width, height, 0, GL33.GL_RGBA, GL33.GL_UNSIGNED_BYTE, buffer);
+
+        this.unbind();
+
         this.width = width;
         this.height = height;
-
-        SDL_Surface surface = SDL_CreateSurfaceFrom(width, height, SDL_PIXELFORMAT_RGBA32, buffer, width * 4);
-
-        if (surface == null) {
-            throw new RuntimeException();
-        }
-
-        this.sdlTexture = SDL_CreateTextureFromSurface(Renderer.address, surface);
-
-        if (this.sdlTexture == null) {
-            throw new RuntimeException();
-        }
-
-        SDL_DestroySurface(surface);
     }
 
     public void subImage(@NonNull Pixmap pixmap, int x, int y, int width, int height) {
-        SDLUtil.withStack(SDL_Rect::malloc, (rect) -> {
-            rect.set(x, y, width, height);
+        this.bind();
 
-            SDL_UpdateTexture(this.sdlTexture, rect, pixmap.getBuffer(), width * 4);
-        });
+        GL33.glTexSubImage2D(GL33.GL_TEXTURE_2D, 0, x, y, width, height, GL33.GL_RGBA, GL33.GL_UNSIGNED_BYTE, pixmap.getBuffer());
+
+        this.unbind();
+    }
+
+    @Override
+    public void bind() {
+        GL33.glBindTexture(GL33.GL_TEXTURE_2D, this.id);
+    }
+
+    @Override
+    public void unbind() {
+        GL33.glBindTexture(GL33.GL_TEXTURE_2D, 0);
     }
 
     @Override
     public void close() {
-        SDL_DestroyTexture(this.sdlTexture);
+        GL33.glDeleteTextures(this.id);
     }
 }

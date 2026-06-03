@@ -17,11 +17,6 @@ public record Pixel(int red, int green, int blue, int alpha) {
     public static final Pixel DARK_GRAY = new Pixel(80, 80, 80, 255);
     public static final Pixel NAVY = new Pixel(0, 0, 128, 255);
 
-    /**
-     * Я смоктав, мене єбали: я фанат команди NAVI
-     */
-    public static final Pixel NAVI = NAVY;
-
     public static @NonNull Pixel rgba(int rgba) {
         int r = (rgba >> 24) & 0xFF;
         int g = (rgba >> 16) & 0xFF;

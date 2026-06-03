@@ -2,29 +2,29 @@ package ua.mazik.delta.util;
 
 import org.jspecify.annotations.NonNull;
 import org.lwjgl.BufferUtils;
-import org.lwjgl.sdl.*;
+import org.lwjgl.stb.STBImage;
 import ua.mazik.delta.renderer.Texture;
 
 import java.nio.ByteBuffer;
+import java.nio.IntBuffer;
 
-import static org.lwjgl.sdl.SDLIOStream.*;
-import static org.lwjgl.sdl.SDLSurface.*;
-
-public class Pixmap {
+public class Pixmap implements AutoCloseable {
     public final int width;
     public final int height;
 
     private final ByteBuffer rawData;
+    private final boolean stbImage;
 
-    private Pixmap(int width, int height, ByteBuffer rawData) {
+    private Pixmap(int width, int height, ByteBuffer rawData, boolean stbImage) {
         this.width = width;
         this.height = height;
 
         this.rawData = rawData;
+        this.stbImage = stbImage;
     }
 
     public Pixmap(int width, int height) {
-        this(width, height, BufferUtils.createByteBuffer(width * height * 4));
+        this(width, height, BufferUtils.createByteBuffer(width * height * 4), false);
     }
 
     public static @NonNull Pixmap fromRawBytes(int width, int height, byte[] rawBytes) {
@@ -33,34 +33,22 @@ public class Pixmap {
         rawData.put(rawBytes);
         rawData.flip();
 
-        return new Pixmap(width, height, rawData);
+        return new Pixmap(width, height, rawData, false);
     }
 
     public static @NonNull Pixmap fromImage(@NonNull ByteBuffer imageBuffer) {
-        long io = SDL_IOFromConstMem(imageBuffer);
+        IntBuffer width = BufferUtils.createIntBuffer(1);
+        IntBuffer height = BufferUtils.createIntBuffer(1);
+        IntBuffer components = BufferUtils.createIntBuffer(1);
 
-        if (io == 0) {
-            throw new RuntimeException();
-        }
-
-        SDL_Surface surface = SDL_LoadSurface_IO(io, true);
-
-        if (surface == null) {
-            throw new RuntimeException();
-        }
-
-        int width = surface.w();
-        int height = surface.h();
-
-        ByteBuffer rawData = surface.pixels().duplicate();
-
-        SDL_DestroySurface(surface);
+        // STBImage.stbi_set_flip_vertically_on_load(true);
+        ByteBuffer rawData = STBImage.stbi_load_from_memory(imageBuffer, width, height, components, 4);
 
         if (rawData == null) {
-            throw new IllegalArgumentException("Buffer is corrupted: ");
+            throw new IllegalArgumentException("Buffer is corrupted: " + STBImage.stbi_failure_reason());
         }
 
-        return new Pixmap(width, height, rawData);
+        return new Pixmap(width.get(), height.get(), rawData, true);
     }
 
     public static @NonNull Pixmap fromImageBytes(byte[] bytes) {
@@ -137,5 +125,12 @@ public class Pixmap {
 
     public @NonNull Texture toTexture() {
         return new Texture(this.width, this.height, this.getBuffer());
+    }
+
+    @Override
+    public void close() {
+        if (this.stbImage) {
+            STBImage.stbi_image_free(this.rawData);
+        }
     }
 }

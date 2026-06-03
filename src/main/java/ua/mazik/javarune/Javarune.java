@@ -2,9 +2,10 @@ package ua.mazik.javarune;
 
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
-import ua.mazik.delta.Renderer;
-import ua.mazik.delta.SDLWindow;
+import org.lwjgl.glfw.GLFW;
+import ua.mazik.delta.GLFWWindow;
 import ua.mazik.delta.audio.Sound;
+import ua.mazik.delta.renderer.Renderer;
 import ua.mazik.delta.renderer.Shader;
 import ua.mazik.delta.renderer.Texture;
 import ua.mazik.delta.renderer.Viewport;
@@ -16,13 +17,14 @@ import ua.mazik.javarune.asset.loader.SoundLoader;
 import ua.mazik.javarune.asset.loader.TextureLoader;
 import ua.mazik.javarune.asset.source.JarAssetSource;
 import ua.mazik.javarune.font.Font;
+import ua.mazik.javarune.render.RenderContext;
 import ua.mazik.javarune.screen.MainMenuScreen;
 import ua.mazik.javarune.screen.Screen;
 
 public class Javarune implements AutoCloseable {
     private static Javarune instance;
 
-    public final SDLWindow window;
+    public final GLFWWindow window;
     public final Viewport viewport;
 
     public final AssetManager assetManager;
@@ -34,12 +36,13 @@ public class Javarune implements AutoCloseable {
 
     private Screen screen;
 
-    public Javarune(@NonNull SDLWindow window) {
+    public Javarune(@NonNull GLFWWindow window) {
         instance = this;
+
+        GLFW.glfwSwapInterval(1);
 
         this.window = window;
         this.viewport = new Viewport(640, 480, Viewport.Scaling.FIT_PIXEL_PERFECT);
-        this.viewport.resize(window.getWidth(), window.getHeight());
         this.viewport.apply();
 
         Renderer.setProjectionMatrix(this.viewport.projectionMatrix);
@@ -56,10 +59,12 @@ public class Javarune implements AutoCloseable {
 
         this.setScreen(new MainMenuScreen());
 
-        window.windowSizeCallback = (width, height) -> {
-            this.viewport.resize(width, height);
+        window.windowSizeCallback = (handle, windowWidth, windowHeight) -> {
+            this.viewport.resize(windowWidth, windowHeight);
             this.viewport.apply();
         };
+
+        window.show();
     }
 
     public static @NonNull Javarune getInstance() {
@@ -86,13 +91,24 @@ public class Javarune implements AutoCloseable {
         Renderer.setClearColor(Pixel.rgb(0x000000));
         Renderer.clear();
 
-        Renderer.setClearColor(Pixel.rgb(0xFF0000));
-        this.viewport.drawFillRect();
+        if (this.screen != null) {
+            this.screen.update();
+            this.viewport.enableScissors();
+
+            RenderContext ctx = new RenderContext();
+
+            this.screen.render(ctx);
+
+            Renderer.drawElements(ctx.elements);
+
+            this.viewport.disableScissors();
+        }
     }
 
     @Override
     public void close() {
         this.assetManager.close();
+        this.window.close();
 
         Renderer.shutdown();
     }

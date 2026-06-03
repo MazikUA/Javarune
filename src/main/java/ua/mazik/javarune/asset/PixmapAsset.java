@@ -9,7 +9,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Optional;
 
-public record PixmapAsset(Pixmap pixmap, String path) {
+public record PixmapAsset(Pixmap pixmap, String path) implements AutoCloseable {
     public static final Codec<PixmapAsset> CODEC = Codecs.STRING.map(
             path -> {
                 Optional<InputStream> asset = Javarune.getInstance().assetManager.findAsset("textures/" + path + ".png");
@@ -28,4 +28,9 @@ public record PixmapAsset(Pixmap pixmap, String path) {
             },
             PixmapAsset::path
     );
+
+    @Override
+    public void close() {
+        this.pixmap.close();
+    }
 }
