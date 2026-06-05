@@ -67,9 +67,9 @@ public class SPNGImage implements AutoCloseable {
     }
 
     /**
-     * Return pixels data using {@code spng_decode_image}.
+     * Return buffer data using {@code spng_decode_image}.
      *
-     * @return {@link ByteBuffer} with pixels data.
+     * @return {@link ByteBuffer} with buffer data.
      * @apiNote Should be freed after usage using {@link MemoryUtil#memFree}.
      */
     public ByteBuffer pixels() {

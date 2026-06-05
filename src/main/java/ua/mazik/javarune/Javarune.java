@@ -69,8 +69,8 @@ public final class Javarune {
         renderer.setDrawColor(Pixel.RED);
         renderer.drawFillRect(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
 
-        textureLoader.get("font/default/ascii").ifPresent(ascii -> {
-            ascii.draw(x, y, 144 * 2, 96 * 2);
+        textureLoader.get("misc/asgore").ifPresent(asgore -> {
+            asgore.draw(x, y, 160, 160);
         });
 
         renderer.present();

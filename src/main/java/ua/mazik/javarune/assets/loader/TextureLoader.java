@@ -38,6 +38,6 @@ public class TextureLoader extends AssetLoader<SDLTexture> {
             return Optional.of(texture);
         }
 
-        return this.load("misc/assgore");
+        return Optional.empty();
     }
 }
