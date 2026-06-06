@@ -5,7 +5,8 @@
             "type": "include",
             "fonts": [
                 "main_ascii",
-                "main_cyrillic_bg"
+                "main_cyrillic",
+                "extra/main_cyrillic_bulgarian"
             ]
         },
         {

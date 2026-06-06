@@ -12,33 +12,31 @@ import java.util.Optional;
 
 public class SpaceFont extends Font {
     public static final ObjectCodec<SpaceFont> CODEC = Codecs.record(
-        Codecs.map(Codecs.STRING, Codecs.INTEGER).propertyOf("spaces").getter(font -> font.spaces),
+        Codecs.map(Codecs.CHAR, Codecs.INTEGER).propertyOf("spaces").getter(font -> font.spaces),
         Overrides.OBJECT_CODEC.getter(font -> font.overrides),
         SpaceFont::new
     );
 
-    public final Map<String, Integer> spaces;
+    public final Map<Character, Integer> spaces;
 
     public final Map<Character, Glyph> glyphs;
 
-    public SpaceFont(Map<String, Integer> spaces, Overrides overrides) {
+    public SpaceFont(Map<Character, Integer> spaces, Overrides overrides) {
         super(FontType.SPACE, overrides);
 
         this.spaces = Collections.unmodifiableMap(spaces);
 
         Map<Character, Glyph> glyphs = new HashMap<>();
 
-        for (Map.Entry<String, Integer> space : spaces.entrySet()) {
-            if (space.getKey().length() != 1) continue;
-
-            glyphs.put(space.getKey().charAt(0), new SpaceGlyph(space.getValue()));
+        for (Map.Entry<Character, Integer> space : spaces.entrySet()) {
+            glyphs.put(space.getKey(), new SpaceGlyph(space.getValue()));
         }
 
         this.glyphs = Collections.unmodifiableMap(glyphs);
     }
 
     @Override
-    public Optional<Glyph> getGlyphOptional(Character character) {
+    public Optional<Glyph> getGlyphOptional(char character) {
         return Optional.ofNullable(this.glyphs.get(character));
     }
 

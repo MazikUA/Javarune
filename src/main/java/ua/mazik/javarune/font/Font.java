@@ -23,11 +23,11 @@ public abstract class Font implements AutoCloseable {
         this.overrides = overrides;
     }
 
-    public Glyph getGlyph(Character character) {
+    public Glyph getGlyph(char character) {
         return this.getGlyphOptional(character).orElse(Glyph.BROKEN);
     }
 
-    public abstract Optional<Glyph> getGlyphOptional(Character character);
+    public abstract Optional<Glyph> getGlyphOptional(char character);
 
     @Override
     public abstract void close();

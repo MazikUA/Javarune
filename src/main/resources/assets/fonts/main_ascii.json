@@ -1,6 +1,6 @@
 {
     "type": "texture",
-    "texture": "font/default/ascii",
+    "texture": "font/main/ascii",
     "rects": {
         "!": [ 9, 0, 4, 13 ],
         "\"": [ 18, 0, 5, 8 ],

@@ -14,27 +14,25 @@ import java.util.*;
 public class TextureFont extends Font {
     public static final ObjectCodec<TextureFont> CODEC = Codecs.record(
         Javarune.imageLoader().assetCodec.propertyOf("texture").getter(font -> font.texture),
-        Codecs.map(Codecs.STRING, Rect.CODEC).propertyOf("rects").getter(font -> font.rects),
+        Codecs.map(Codecs.CHAR, Rect.CODEC).propertyOf("rects").getter(font -> font.rects),
         Overrides.OBJECT_CODEC.getter(font -> font.overrides),
         TextureFont::new
     );
 
     public final LoadedAsset<SPNGImage> texture;
-    public final Map<String, Rect> rects;
+    public final Map<Character, Rect> rects;
 
     public final Map<Character, Glyph> glyphs;
 
-    public TextureFont(LoadedAsset<SPNGImage> texture, Map<String, Rect> rects, Overrides overrides) {
+    public TextureFont(LoadedAsset<SPNGImage> texture, Map<Character, Rect> rects, Overrides overrides) {
         super(FontType.TEXTURE, overrides);
 
         this.texture = texture;
-        this.rects = rects;
+        this.rects = Collections.unmodifiableMap(rects);
 
         Map<Character, Glyph> temp = new HashMap<>();
 
-        for (Map.Entry<String, Rect> rect : rects.entrySet()) {
-            if (rect.getKey().length() != 1) continue;
-
+        for (Map.Entry<Character, Rect> rect : rects.entrySet()) {
             String regionName = "character_" + rect.getKey();
             String suffix = this.overrides.getSuffix();
 
@@ -42,14 +40,14 @@ public class TextureFont extends Font {
                 regionName += "_" + suffix;
             }
 
-            temp.put(rect.getKey().charAt(0), new TextureGlyph(regionName, this, rect.getValue()));
+            temp.put(rect.getKey(), new TextureGlyph(regionName, this, rect.getValue()));
         }
 
         this.glyphs = Collections.unmodifiableMap(temp);
     }
 
     @Override
-    public Optional<Glyph> getGlyphOptional(Character character) {
+    public Optional<Glyph> getGlyphOptional(char character) {
         return Optional.ofNullable(this.glyphs.get(character));
     }
 

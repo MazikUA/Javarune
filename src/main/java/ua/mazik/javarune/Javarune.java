@@ -95,7 +95,11 @@ public final class Javarune {
             "@ABCDEFGHIJKLMNO",
             "PQRSTUVWXYZ[\\]^_",
             "`abcdefghijklmno",
-            "pqrstuvwxyz{|}` "
+            "pqrstuvwxyz{|}` ",
+            "тест бляха муха її ЇЇ",
+            "български език",
+            "ДЛФ",
+            "вгджзийклптцшщю"
         );
 
         fontLoader.get("main").ifPresent(font -> {
@@ -104,7 +108,7 @@ public final class Javarune {
             for (String str : strings) {
                 AtomicInteger x = new AtomicInteger();
 
-                for (Character character : str.toCharArray()) {
+                for (char character : str.toCharArray()) {
                     Glyph glyph = font.getGlyph(character);
 
                     glyph.render(() -> atlasManager.getOrCreate("main", 2048, 2048), x.get(), texty);

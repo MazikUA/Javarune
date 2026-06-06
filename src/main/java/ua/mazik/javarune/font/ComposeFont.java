@@ -27,7 +27,7 @@ public class ComposeFont extends Font {
     }
 
     @Override
-    public Optional<Glyph> getGlyphOptional(Character character) {
+    public Optional<Glyph> getGlyphOptional(char character) {
         for (Font font : this.providers) {
             if (!font.overrides.isFulfilled()) continue;
 

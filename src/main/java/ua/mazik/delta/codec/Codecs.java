@@ -7,6 +7,7 @@ import ua.mazik.delta.util.function.PentaFunction;
 import ua.mazik.delta.util.function.QuadFunction;
 import ua.mazik.delta.util.function.TriFunction;
 
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.BiFunction;
@@ -17,6 +18,15 @@ public final class Codecs {
     public static final Codec<Integer> INTEGER = Codec.of(JsonElement::getAsInt, JsonPrimitive::new);
     public static final Codec<Float> FLOAT = Codec.of(JsonElement::getAsFloat, JsonPrimitive::new);
     public static final Codec<String> STRING = Codec.of(JsonElement::getAsString, JsonPrimitive::new);
+    public static final Codec<Character> CHAR = STRING.map(
+        str -> {
+            if (str.length() != 1) {
+                throw new IllegalArgumentException();
+            }
+            return str.charAt(0);
+        },
+        Object::toString
+    );
 
     private Codecs() {
     }

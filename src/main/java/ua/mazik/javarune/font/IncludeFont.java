@@ -28,7 +28,7 @@ public class IncludeFont extends Font {
     }
 
     @Override
-    public Optional<Glyph> getGlyphOptional(Character character) {
+    public Optional<Glyph> getGlyphOptional(char character) {
         for (LoadedAsset<Font> font : this.fonts) {
             if (!font.data().overrides.isFulfilled()) continue;
 
