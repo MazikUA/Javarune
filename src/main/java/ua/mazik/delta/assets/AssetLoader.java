@@ -1,5 +1,7 @@
 package ua.mazik.delta.assets;
 
+import ua.mazik.delta.codec.Codec;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -7,10 +9,12 @@ import java.util.Optional;
 public abstract class AssetLoader<T extends AutoCloseable> implements AutoCloseable {
     public final AssetSource assetSource;
     public final Map<String, T> loadedAssets;
+    public final Codec<LoadedAsset<T>> assetCodec;
 
     public AssetLoader(AssetSource assetSource) {
         this.assetSource = assetSource;
         this.loadedAssets = new HashMap<>();
+        this.assetCodec = LoadedAsset.codec(this);
     }
 
     public abstract Optional<T> load(String path);

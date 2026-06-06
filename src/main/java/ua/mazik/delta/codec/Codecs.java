@@ -44,6 +44,31 @@ public final class Codecs {
         );
     }
 
+    public static <K, V> Codec<Map<K, V>> map(Codec<K> keyCodec, Function<K, Codec<V>> valueCodec) {
+        return Codec.of(
+            json -> {
+                Map<K, V> map = new HashMap<>();
+
+                for (Map.Entry<String, JsonElement> entry : json.getAsJsonObject().asMap().entrySet()) {
+                    K key = keyCodec.decode(new JsonPrimitive(entry.getKey()));
+
+                    map.put(key, valueCodec.apply(key).decode(entry.getValue()));
+                }
+
+                return map;
+            },
+            map -> {
+                JsonObject object = new JsonObject();
+
+                for (Map.Entry<K, V> entry : map.entrySet()) {
+                    object.add(keyCodec.encode(entry.getKey()).getAsString(), valueCodec.apply(entry.getKey()).encode(entry.getValue()));
+                }
+
+                return object;
+            }
+        );
+    }
+
     public static <T1, R> ObjectCodec<R> record(GetterCodec<T1, R> t1, Function<T1, ? extends R> constructor) {
         return ObjectCodec.of(
             object -> constructor.apply(t1.objectCodec().decode(object)),

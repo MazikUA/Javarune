@@ -1,45 +1,51 @@
 package ua.mazik.javarune.font;
 
+import ua.mazik.delta.assets.LoadedAsset;
 import ua.mazik.delta.codec.Codecs;
 import ua.mazik.delta.codec.ObjectCodec;
-import ua.mazik.delta.sdl.texture.SDLTextureAtlas;
 import ua.mazik.javarune.Javarune;
 import ua.mazik.javarune.font.glyph.Glyph;
 
-import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
-import java.util.function.BiConsumer;
-import java.util.function.Function;
-import java.util.function.Supplier;
+import java.util.Optional;
 
 public class IncludeFont extends Font {
     public static final ObjectCodec<IncludeFont> CODEC = Codecs.record(
-        Codecs.STRING.list().propertyOf("fonts").getter(font -> font.fonts),
+        Javarune.fontLoader().assetCodec.list().propertyOf("fonts").getter(font -> font.fonts),
+        Overrides.OBJECT_CODEC.getter(font -> font.overrides),
         IncludeFont::new
     );
+    public final List<LoadedAsset<Font>> fonts;
 
-    public final List<String> fonts;
-    public final List<Font> providers;
+    public IncludeFont(List<LoadedAsset<Font>> fonts, Overrides overrides) {
+        super(FontType.COMPOSE, overrides);
 
-    public IncludeFont(List<String> fonts) {
-        super(FontType.COMPOSE);
+        fonts.sort(Comparator.comparingInt((LoadedAsset<Font> font) -> font.data().overrides.priority()).reversed());
 
         this.fonts = Collections.unmodifiableList(fonts);
-
-        List<Font> providers = new ArrayList<>();
-
-        for (String path : fonts) {
-            Javarune.fontLoader().get(path).ifPresent(providers::add);
-        }
-
-        this.providers = Collections.unmodifiableList(providers);
     }
 
     @Override
-    public void loadGlyphs(BiConsumer<Character, Glyph> consumer, Function<Character, Glyph> function, Supplier<SDLTextureAtlas> supplier) {
-        for (Font font : this.providers) {
-            font.loadGlyphs(consumer, function, supplier);
+    public Optional<Glyph> getGlyphOptional(Character character) {
+        for (LoadedAsset<Font> font : this.fonts) {
+            if (!font.data().overrides.isFulfilled()) continue;
+
+            Optional<Glyph> glyph = font.data().getGlyphOptional(character);
+
+            if (glyph.isPresent()) {
+                return glyph;
+            }
+        }
+
+        return Optional.empty();
+    }
+
+    @Override
+    public void close() {
+        for (LoadedAsset<Font> asset : this.fonts) {
+            asset.data().close();
         }
     }
 }

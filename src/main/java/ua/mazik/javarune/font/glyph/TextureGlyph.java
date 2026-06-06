@@ -3,33 +3,19 @@ package ua.mazik.javarune.font.glyph;
 import ua.mazik.delta.sdl.texture.SDLTextureAtlas;
 import ua.mazik.javarune.font.TextureFont;
 
-import java.util.Comparator;
-import java.util.LinkedHashMap;
-import java.util.Map;
 import java.util.Optional;
 import java.util.function.Supplier;
-import java.util.stream.Collectors;
 
-public record TextureGlyph(Supplier<SDLTextureAtlas> atlas, Map<TextureFont, TextureFont.Overrides> overrides, TextureFont defaultFont, Character character) implements Glyph {
+public record TextureGlyph(String regionName, TextureFont font, TextureFont.Rect rect) implements Glyph {
     @Override
-    public void render(int x, int y) {
-        TextureFont font = this.winningFont();
-
-        String regionName = "character_" + this.character;
-
-        if (font.overrides != null) {
-            regionName += "_" + font.overrides.language();
-        }
-
-        SDLTextureAtlas atlas = this.atlas.get();
-        Optional<SDLTextureAtlas.Region> region = atlas.findRegion(regionName);
+    public void render(Supplier<SDLTextureAtlas> atlas, int x, int y) {
+        SDLTextureAtlas gotAtlas = atlas.get();
+        Optional<SDLTextureAtlas.Region> region = gotAtlas.findRegion(this.regionName);
 
         if (region.isEmpty()) {
-            TextureFont.Rect rect = font.glyphs.get(this.character);
+            gotAtlas.add(this.regionName, this.font.texture.data().getRegion(this.rect.x(), this.rect.y(), this.rect.w(), this.rect.h()));
 
-            atlas.add(regionName, font.texture.data().getRegion(rect.x(), rect.y(), rect.w(), rect.h()));
-
-            region = atlas.findRegion(regionName);
+            region = gotAtlas.findRegion(this.regionName);
         }
 
         region.ifPresent(value -> value.draw(x, y));
@@ -37,26 +23,6 @@ public record TextureGlyph(Supplier<SDLTextureAtlas> atlas, Map<TextureFont, Tex
 
     @Override
     public int width() {
-        return this.winningFont().glyphs.get(this.character).w();
-    }
-
-    private TextureFont winningFont() {
-        Map<TextureFont, TextureFont.Overrides> map = this.overrides.entrySet()
-            .stream()
-            .sorted(Comparator.comparingInt((Map.Entry<TextureFont, TextureFont.Overrides> e) -> e.getValue().priority()).reversed())
-            .collect(Collectors.toMap(
-                Map.Entry::getKey,
-                Map.Entry::getValue,
-                (a, b) -> a,
-                LinkedHashMap::new
-            ));
-
-        for (Map.Entry<TextureFont, TextureFont.Overrides> a : map.entrySet()) {
-            if (a.getValue().language().equals("en_us")) {
-                return a.getKey();
-            }
-        }
-
-        return this.defaultFont;
+        return this.rect.w();
     }
 }

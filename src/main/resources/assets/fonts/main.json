@@ -10,7 +10,7 @@
         },
         {
             "type": "space",
-            "glyphs": {
+            "spaces": {
                 " ": 4
             }
         }

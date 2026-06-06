@@ -1,11 +1,13 @@
 {
     "type": "texture",
     "texture": "font/default/ascii",
-    "glyphs": {
+    "rects": {
         "A": [ 27, 32, 6, 13 ]
     },
     "overrides": {
         "priority": 1,
-        "language": "bg_bg"
+        "conditions": {
+            "languages": [ "bg_bg" ]
+        }
     }
 }

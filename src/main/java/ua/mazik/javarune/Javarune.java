@@ -12,8 +12,9 @@ import ua.mazik.delta.util.Pixel;
 import ua.mazik.javarune.assets.loader.FontLoader;
 import ua.mazik.javarune.assets.loader.ImageLoader;
 import ua.mazik.javarune.assets.loader.TextureLoader;
-import ua.mazik.javarune.font.Font;
+import ua.mazik.javarune.font.glyph.Glyph;
 import ua.mazik.javarune.settings.JavaruneSettings;
+import ua.mazik.javarune.util.AtlasManager;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -37,6 +38,8 @@ public final class Javarune {
 
     private static SDLWindow window;
     private static SDLRenderer renderer;
+
+    private static AtlasManager atlasManager;
 
     private static AssetSource assetSource;
 
@@ -65,11 +68,11 @@ public final class Javarune {
         renderer.setRenderScale(RENDER_SCALE, RENDER_SCALE);
         renderer.setRenderLogicalPresentation(LOGICAL_RENDER_WIDTH, LOGICAL_RENDER_HEIGHT, SDLPresentationMode.INTEGER_SCALE);
 
+        atlasManager = new AtlasManager(renderer);
+
         fontLoader = new FontLoader(assetSource);
         imageLoader = new ImageLoader(assetSource);
         textureLoader = new TextureLoader(assetSource, renderer);
-
-        fontLoader().get("main").ifPresent(Font::loadGlyphs);
 
         window.show();
     }
@@ -86,15 +89,13 @@ public final class Javarune {
         });
 
         fontLoader.get("main").ifPresent(font -> {
-            font.loadGlyphs();
-
             AtomicInteger x = new AtomicInteger();
 
-            for (Character character : "te!\"#$%&A".toCharArray()) {
-                font.getGlyph(character).ifPresent(glyph -> {
-                    glyph.render(x.get(), 240);
-                    x.addAndGet(glyph.width());
-                });
+            for (Character character : "!\"#$%&A".toCharArray()) {
+                Glyph glyph = font.getGlyph(character);
+
+                glyph.render(() -> atlasManager.getOrCreate("main", 2048, 2048), x.get(), 240);
+                x.addAndGet(glyph.width());
             }
         });
 
@@ -103,8 +104,16 @@ public final class Javarune {
         return true;
     }
 
+    public static String getCurrentLanguage() {
+        return "en_us";
+    }
+
     public static SDLRenderer renderer() {
         return renderer;
+    }
+
+    public static AtlasManager atlasManager() {
+        return atlasManager;
     }
 
     public static AssetSource assetSource() {
@@ -145,6 +154,8 @@ public final class Javarune {
         settings.write();
 
         window.close();
+
+        atlasManager.close();
 
         fontLoader.close();
         imageLoader.close();
