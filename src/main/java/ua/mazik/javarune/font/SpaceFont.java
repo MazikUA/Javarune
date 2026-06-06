@@ -29,6 +29,8 @@ public class SpaceFont extends Font {
         Map<Character, Glyph> glyphs = new HashMap<>();
 
         for (Map.Entry<String, Integer> space : spaces.entrySet()) {
+            if (space.getKey().length() != 1) continue;
+
             glyphs.put(space.getKey().charAt(0), new SpaceGlyph(space.getValue()));
         }
 

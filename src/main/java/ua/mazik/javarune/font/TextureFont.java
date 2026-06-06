@@ -33,7 +33,9 @@ public class TextureFont extends Font {
         Map<Character, Glyph> temp = new HashMap<>();
 
         for (Map.Entry<String, Rect> rect : rects.entrySet()) {
-            String regionName = "character_" + rect.getValue();
+            if (rect.getKey().length() != 1) continue;
+
+            String regionName = "character_" + rect.getKey();
             String suffix = this.overrides.getSuffix();
 
             if (!suffix.isEmpty()) {

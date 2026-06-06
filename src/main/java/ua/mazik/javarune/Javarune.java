@@ -16,6 +16,7 @@ import ua.mazik.javarune.font.glyph.Glyph;
 import ua.mazik.javarune.settings.JavaruneSettings;
 import ua.mazik.javarune.util.AtlasManager;
 
+import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import static org.lwjgl.sdl.SDLEvents.*;
@@ -88,14 +89,29 @@ public final class Javarune {
             asgore.draw(x, y, 160, 160);
         });
 
+        List<String> strings = List.of(
+            " !\"#$%&'()*+,-./",
+            "0123456789:;<=>?",
+            "@ABCDEFGHIJKLMNO",
+            "PQRSTUVWXYZ[\\]^_",
+            "`abcdefghijklmno",
+            "pqrstuvwxyz{|}` "
+        );
+
         fontLoader.get("main").ifPresent(font -> {
-            AtomicInteger x = new AtomicInteger();
+            int texty = 240;
 
-            for (Character character : "!\"#$%&A".toCharArray()) {
-                Glyph glyph = font.getGlyph(character);
+            for (String str : strings) {
+                AtomicInteger x = new AtomicInteger();
 
-                glyph.render(() -> atlasManager.getOrCreate("main", 2048, 2048), x.get(), 240);
-                x.addAndGet(glyph.width());
+                for (Character character : str.toCharArray()) {
+                    Glyph glyph = font.getGlyph(character);
+
+                    glyph.render(() -> atlasManager.getOrCreate("main", 2048, 2048), x.get(), texty);
+                    x.addAndGet(glyph.width() + 1);
+                }
+
+                texty += 16;
             }
         });
 
@@ -105,7 +121,7 @@ public final class Javarune {
     }
 
     public static String getCurrentLanguage() {
-        return "en_us";
+        return "bg_bg";
     }
 
     public static SDLRenderer renderer() {

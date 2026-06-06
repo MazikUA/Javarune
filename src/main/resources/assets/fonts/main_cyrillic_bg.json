@@ -1,11 +1,11 @@
 {
     "type": "texture",
-    "texture": "font/default/ascii",
+    "texture": "misc/asgore",
     "rects": {
-        "A": [ 27, 32, 6, 13 ]
+        "A": [ 0, 0, 40, 40 ]
     },
     "overrides": {
-        "priority": 1,
+        "priority": 10,
         "conditions": {
             "languages": [ "bg_bg" ]
         }
