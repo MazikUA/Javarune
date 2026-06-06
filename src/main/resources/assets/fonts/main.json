@@ -1,0 +1,18 @@
+{
+    "type": "compose",
+    "providers": [
+        {
+            "type": "include",
+            "fonts": [
+                "main_ascii",
+                "main_cyrillic_bg"
+            ]
+        },
+        {
+            "type": "space",
+            "glyphs": {
+                " ": 4
+            }
+        }
+    ]
+}

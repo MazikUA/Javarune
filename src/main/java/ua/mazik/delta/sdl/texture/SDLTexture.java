@@ -1,8 +1,10 @@
 package ua.mazik.delta.sdl.texture;
 
+import org.joml.Vector2i;
 import org.lwjgl.sdl.*;
 import ua.mazik.delta.sdl.renderer.SDLRenderer;
 import ua.mazik.delta.sdl.util.SDLUtil;
+import ua.mazik.delta.spng.SPNGImage;
 import ua.mazik.delta.util.LWJGLUtil;
 import ua.mazik.delta.util.PixelData;
 
@@ -16,8 +18,16 @@ public class SDLTexture implements AutoCloseable {
     public final SDL_Texture sdlTexture;
     public final SDLRenderer renderer;
 
-    public SDLTexture(SDLBitmap bitmap, SDLRenderer renderer) {
-        this.sdlTexture = SDL_CreateTextureFromSurface(renderer.address, bitmap.sdlSurface);
+    public SDLTexture(SPNGImage image, SDLRenderer renderer) {
+        Vector2i resolution = image.resolution();
+
+        SDL_Surface surface = SDL_CreateSurfaceFrom(resolution.x, resolution.y, SDL_PIXELFORMAT_RGBA32, image.pixels(), resolution.x * 4);
+
+        if (surface == null) {
+            SDLUtil.throwException();
+        }
+
+        this.sdlTexture = SDL_CreateTextureFromSurface(renderer.address, surface);
 
         if (this.sdlTexture == null) {
             SDLUtil.throwException();

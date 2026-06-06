@@ -118,5 +118,8 @@ public class SDLTextureAtlas implements AutoCloseable {
     }
 
     public record Region(int x, int y, int w, int h, Page page) {
+        public void draw(int x, int y) {
+            page.texture.draw(x, y, this.w, this.h, this.x, this.y, this.w, this.h);
+        }
     }
 }

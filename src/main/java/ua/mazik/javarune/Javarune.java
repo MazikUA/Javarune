@@ -9,8 +9,13 @@ import ua.mazik.delta.sdl.renderer.SDLRenderer;
 import ua.mazik.delta.sdl.util.SDLUtil;
 import ua.mazik.delta.sdl.window.SDLWindow;
 import ua.mazik.delta.util.Pixel;
+import ua.mazik.javarune.assets.loader.FontLoader;
+import ua.mazik.javarune.assets.loader.ImageLoader;
 import ua.mazik.javarune.assets.loader.TextureLoader;
+import ua.mazik.javarune.font.Font;
 import ua.mazik.javarune.settings.JavaruneSettings;
+
+import java.util.concurrent.atomic.AtomicInteger;
 
 import static org.lwjgl.sdl.SDLEvents.*;
 import static org.lwjgl.sdl.SDLKeycode.*;
@@ -34,6 +39,9 @@ public final class Javarune {
     private static SDLRenderer renderer;
 
     private static AssetSource assetSource;
+
+    private static FontLoader fontLoader;
+    private static ImageLoader imageLoader;
     private static TextureLoader textureLoader;
 
     private static int x;
@@ -57,7 +65,11 @@ public final class Javarune {
         renderer.setRenderScale(RENDER_SCALE, RENDER_SCALE);
         renderer.setRenderLogicalPresentation(LOGICAL_RENDER_WIDTH, LOGICAL_RENDER_HEIGHT, SDLPresentationMode.INTEGER_SCALE);
 
+        fontLoader = new FontLoader(assetSource);
+        imageLoader = new ImageLoader(assetSource);
         textureLoader = new TextureLoader(assetSource, renderer);
+
+        fontLoader().get("main").ifPresent(Font::loadGlyphs);
 
         window.show();
     }
@@ -73,9 +85,42 @@ public final class Javarune {
             asgore.draw(x, y, 160, 160);
         });
 
+        fontLoader.get("main").ifPresent(font -> {
+            font.loadGlyphs();
+
+            AtomicInteger x = new AtomicInteger();
+
+            for (Character character : "te!\"#$%&A".toCharArray()) {
+                font.getGlyph(character).ifPresent(glyph -> {
+                    glyph.render(x.get(), 240);
+                    x.addAndGet(glyph.width());
+                });
+            }
+        });
+
         renderer.present();
 
         return true;
+    }
+
+    public static SDLRenderer renderer() {
+        return renderer;
+    }
+
+    public static AssetSource assetSource() {
+        return assetSource;
+    }
+
+    public static FontLoader fontLoader() {
+        return fontLoader;
+    }
+
+    public static ImageLoader imageLoader() {
+        return imageLoader;
+    }
+
+    public static TextureLoader textureLoader() {
+        return textureLoader;
     }
 
     private static boolean event(SDL_Event event) {
@@ -100,7 +145,11 @@ public final class Javarune {
         settings.write();
 
         window.close();
+
+        fontLoader.close();
+        imageLoader.close();
         textureLoader.close();
+
         renderer.close();
     }
 

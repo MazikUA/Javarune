@@ -28,6 +28,10 @@ public abstract class AssetLoader<T extends AutoCloseable> implements AutoClosea
         return Optional.of(loaded);
     }
 
+    public Optional<LoadedAsset<T>> getAsAsset(String path) {
+        return this.get(path).map(asset -> new LoadedAsset<>(path, asset));
+    }
+
     @Override
     public void close() {
         if (this.loadedAssets.isEmpty()) return;
