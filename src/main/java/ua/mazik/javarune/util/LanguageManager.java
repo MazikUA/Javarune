@@ -6,10 +6,7 @@ import com.google.gson.JsonParser;
 import ua.mazik.javarune.Javarune;
 
 import java.nio.charset.StandardCharsets;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 public class LanguageManager {
     public static final String DEFAULT_LANGUAGE = "en_us";
@@ -20,7 +17,7 @@ public class LanguageManager {
     private Map<String, String> lang;
 
     public LanguageManager() {
-        Map<String, String> map = new HashMap<>();
+        Map<String, String> map = new TreeMap<>();
 
         Javarune.assetSource().listAssets("lang", ".json").forEach(asset -> {
             String langName = asset.fileName();
@@ -41,8 +38,6 @@ public class LanguageManager {
         this.defaultLang = this.loadLanguage(DEFAULT_LANGUAGE);
 
         this.reloadLanguage();
-
-        System.out.println(this.lang);
     }
 
     public void reloadLanguage() {

@@ -52,9 +52,6 @@ public final class Javarune {
     private static AtlasManager atlasManager;
     private static LanguageManager languageManager;
 
-    private static int x;
-    private static int y;
-
     private Javarune() {
     }
 
@@ -162,10 +159,6 @@ public final class Javarune {
             case SDL_EVENT_KEY_DOWN -> {
                 switch (event.key().key()) {
                     case SDLK_F4 -> window.toggleFullscreen();
-                    case SDLK_LEFT -> x--;
-                    case SDLK_RIGHT -> x++;
-                    case SDLK_UP -> y--;
-                    case SDLK_DOWN -> y++;
                     case SDLK_E -> {
                         SETTINGS.language.set("bg_bg");
                         languageManager.reloadLanguage();
