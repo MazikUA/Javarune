@@ -11,7 +11,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.function.Function;
 
-public abstract class Font implements AutoCloseable {
+public abstract class Font {
     public static final Codec<Font> CODEC = StringIdentifiable.createCodec(FontType::values)
         .dispatch("type", font -> font.type, FontType::codec);
 
@@ -24,9 +24,6 @@ public abstract class Font implements AutoCloseable {
     }
 
     public abstract Optional<Glyph> getGlyph(char character);
-
-    @Override
-    public abstract void close();
 
     public enum Condition implements StringIdentifiable {
         LANGUAGES(

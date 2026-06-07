@@ -40,9 +40,4 @@ public class ComposeFont extends Font {
 
         return Optional.empty();
     }
-
-    @Override
-    public void close() {
-        this.providers.forEach(Font::close);
-    }
 }

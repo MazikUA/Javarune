@@ -41,11 +41,4 @@ public class IncludeFont extends Font {
 
         return Optional.empty();
     }
-
-    @Override
-    public void close() {
-        for (LoadableAsset<Font> asset : this.fonts) {
-            asset.data().close();
-        }
-    }
 }

@@ -11,11 +11,13 @@ import ua.mazik.delta.sdl.window.SDLWindow;
 import ua.mazik.delta.util.Pixel;
 import ua.mazik.javarune.assets.loader.FontLoader;
 import ua.mazik.javarune.assets.loader.ImageLoader;
+import ua.mazik.javarune.assets.loader.JsonLoader;
 import ua.mazik.javarune.assets.loader.TextureLoader;
 import ua.mazik.javarune.settings.JavaruneSettings;
 import ua.mazik.javarune.text.LiteralText;
 import ua.mazik.javarune.text.TextRenderer;
 import ua.mazik.javarune.util.AtlasManager;
+import ua.mazik.javarune.util.LanguageManager;
 
 import java.util.List;
 
@@ -40,13 +42,15 @@ public final class Javarune {
     private static SDLWindow window;
     private static SDLRenderer renderer;
 
-    private static AtlasManager atlasManager;
-
     private static AssetSource assetSource;
 
     private static FontLoader fontLoader;
     private static ImageLoader imageLoader;
+    private static JsonLoader jsonLoader;
     private static TextureLoader textureLoader;
+
+    private static AtlasManager atlasManager;
+    private static LanguageManager languageManager;
 
     private static int x;
     private static int y;
@@ -69,11 +73,13 @@ public final class Javarune {
         renderer.setRenderScale(RENDER_SCALE, RENDER_SCALE);
         renderer.setRenderLogicalPresentation(LOGICAL_RENDER_WIDTH, LOGICAL_RENDER_HEIGHT, SDLPresentationMode.INTEGER_SCALE);
 
-        atlasManager = new AtlasManager(renderer);
-
         fontLoader = new FontLoader(assetSource);
         imageLoader = new ImageLoader(assetSource);
+        jsonLoader = new JsonLoader(assetSource);
         textureLoader = new TextureLoader(assetSource, renderer);
+
+        atlasManager = new AtlasManager(renderer);
+        languageManager = new LanguageManager();
 
         window.show();
     }
@@ -81,7 +87,6 @@ public final class Javarune {
     private static boolean update() {
         renderer.setDrawColor(Pixel.BLACK);
         renderer.clear();
-
 
         List<String> strings = List.of(
             " !\"#$%&'()*+,-./",
@@ -104,6 +109,14 @@ public final class Javarune {
             textY += 40;
         }
 
+        textY = 40;
+
+        for (String str : languageManager.languageNames.values()) {
+            TextRenderer.renderText(new LiteralText(str), 300, textY);
+
+            textY += 40;
+        }
+
         renderer.present();
 
         return true;
@@ -111,10 +124,6 @@ public final class Javarune {
 
     public static SDLRenderer renderer() {
         return renderer;
-    }
-
-    public static AtlasManager atlasManager() {
-        return atlasManager;
     }
 
     public static AssetSource assetSource() {
@@ -129,8 +138,20 @@ public final class Javarune {
         return imageLoader;
     }
 
+    public static JsonLoader jsonLoader() {
+        return jsonLoader;
+    }
+
     public static TextureLoader textureLoader() {
         return textureLoader;
+    }
+
+    public static AtlasManager atlasManager() {
+        return atlasManager;
+    }
+
+    public static LanguageManager languageManager() {
+        return languageManager;
     }
 
     private static boolean event(SDL_Event event) {
@@ -145,6 +166,10 @@ public final class Javarune {
                     case SDLK_RIGHT -> x++;
                     case SDLK_UP -> y--;
                     case SDLK_DOWN -> y++;
+                    case SDLK_E -> {
+                        SETTINGS.language.set("bg_bg");
+                        languageManager.reloadLanguage();
+                    }
                 }
             }
         }

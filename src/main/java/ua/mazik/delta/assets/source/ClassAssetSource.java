@@ -20,22 +20,33 @@ public record ClassAssetSource(Class<?> clazz) implements AssetSource {
     public Optional<Asset> getAsset(String path) {
         if (clazz.getResource("/assets/" + path) == null) return Optional.empty();
 
-        Asset asset = () -> {
-            try {
-                InputStream stream = clazz.getResourceAsStream("/assets/" + path);
+        Asset asset = new Asset() {
+            @Override
+            public String fileName() {
+                String[] split = path.split("/");
+                String[] fileNameSplit = split[split.length - 1].split("\\.");
 
-                if (stream != null) {
-                    byte[] bytes = stream.readAllBytes();
-
-                    stream.close();
-
-                    return bytes;
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
+                return fileNameSplit[0];
             }
 
-            return new byte[0];
+            @Override
+            public byte[] getBytes() {
+                try {
+                    InputStream stream = clazz.getResourceAsStream("/assets/" + path);
+
+                    if (stream != null) {
+                        byte[] bytes = stream.readAllBytes();
+
+                        stream.close();
+
+                        return bytes;
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+                return new byte[0];
+            }
         };
 
         return Optional.of(asset);
@@ -54,7 +65,7 @@ public record ClassAssetSource(Class<?> clazz) implements AssetSource {
 
                 if (folderPath == null) return assets;
 
-                try (Stream<Path> stream = Files.walk(folderPath)) {
+                try (Stream<Path> stream = Files.list(folderPath)) {
                     stream.filter(Files::isRegularFile)
                         .filter(filePath -> filePath.toString().endsWith(suffix))
                         .forEach(filePath -> {

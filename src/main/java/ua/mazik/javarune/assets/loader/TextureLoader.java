@@ -1,14 +1,14 @@
 package ua.mazik.javarune.assets.loader;
 
-import ua.mazik.delta.assets.AssetLoader;
 import ua.mazik.delta.assets.AssetSource;
+import ua.mazik.delta.assets.CacheableAssetLoader;
 import ua.mazik.delta.sdl.renderer.SDLRenderer;
 import ua.mazik.delta.sdl.texture.SDLTexture;
 import ua.mazik.javarune.Javarune;
 
 import java.util.Optional;
 
-public class TextureLoader extends AssetLoader<SDLTexture> {
+public class TextureLoader extends CacheableAssetLoader<SDLTexture> {
     public final SDLRenderer renderer;
 
     public TextureLoader(AssetSource assetSource, SDLRenderer renderer) {

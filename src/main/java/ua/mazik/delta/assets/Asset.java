@@ -1,6 +1,7 @@
 package ua.mazik.delta.assets;
 
-@FunctionalInterface
 public interface Asset {
+    String fileName();
+
     byte[] getBytes();
 }

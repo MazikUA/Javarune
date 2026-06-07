@@ -51,11 +51,6 @@ public class TextureFont extends Font {
         return Optional.ofNullable(this.glyphs.get(character));
     }
 
-    @Override
-    public void close() {
-
-    }
-
     public record Rect(int x, int y, int w, int h) {
         public static final Codec<Rect> CODEC = Codecs.INTEGER.list().map(
             list -> {
