@@ -9,12 +9,12 @@ import java.util.Optional;
 public abstract class AssetLoader<T extends AutoCloseable> implements AutoCloseable {
     public final AssetSource assetSource;
     public final Map<String, T> loadedAssets;
-    public final Codec<LoadedAsset<T>> assetCodec;
+    public final Codec<LoadableAsset<T>> assetCodec;
 
     public AssetLoader(AssetSource assetSource) {
         this.assetSource = assetSource;
         this.loadedAssets = new HashMap<>();
-        this.assetCodec = LoadedAsset.codec(this);
+        this.assetCodec = LoadableAsset.codec(this);
     }
 
     public abstract Optional<T> load(String path);
@@ -32,8 +32,8 @@ public abstract class AssetLoader<T extends AutoCloseable> implements AutoClosea
         return Optional.of(loaded);
     }
 
-    public Optional<LoadedAsset<T>> getAsAsset(String path) {
-        return this.get(path).map(asset -> new LoadedAsset<>(path, asset));
+    public LoadableAsset<T> getAsAsset(String path) {
+        return new LoadableAsset<>(path, () -> this.get(path));
     }
 
     @Override

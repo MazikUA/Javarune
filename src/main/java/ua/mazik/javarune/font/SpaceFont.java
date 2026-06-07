@@ -36,7 +36,7 @@ public class SpaceFont extends Font {
     }
 
     @Override
-    public Optional<Glyph> getGlyphOptional(char character) {
+    public Optional<Glyph> getGlyph(char character) {
         return Optional.ofNullable(this.glyphs.get(character));
     }
 

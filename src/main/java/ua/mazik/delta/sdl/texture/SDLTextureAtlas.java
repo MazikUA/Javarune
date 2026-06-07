@@ -121,5 +121,11 @@ public class SDLTextureAtlas implements AutoCloseable {
         public void draw(int x, int y) {
             page.texture.draw(x, y, this.w, this.h, this.x, this.y, this.w, this.h);
         }
+
+        public void drawAsQuad(SDLQuad quad) {
+            quad.setTexCoord(this.x, this.y, this.w, this.h, this.page.atlas.width, this.page.atlas.height);
+
+            page.texture.drawQuad(quad);
+        }
     }
 }

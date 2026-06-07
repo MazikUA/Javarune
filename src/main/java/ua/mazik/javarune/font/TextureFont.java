@@ -1,6 +1,6 @@
 package ua.mazik.javarune.font;
 
-import ua.mazik.delta.assets.LoadedAsset;
+import ua.mazik.delta.assets.LoadableAsset;
 import ua.mazik.delta.codec.Codec;
 import ua.mazik.delta.codec.Codecs;
 import ua.mazik.delta.codec.ObjectCodec;
@@ -19,12 +19,12 @@ public class TextureFont extends Font {
         TextureFont::new
     );
 
-    public final LoadedAsset<SPNGImage> texture;
+    public final LoadableAsset<SPNGImage> texture;
     public final Map<Character, Rect> rects;
 
     public final Map<Character, Glyph> glyphs;
 
-    public TextureFont(LoadedAsset<SPNGImage> texture, Map<Character, Rect> rects, Overrides overrides) {
+    public TextureFont(LoadableAsset<SPNGImage> texture, Map<Character, Rect> rects, Overrides overrides) {
         super(FontType.TEXTURE, overrides);
 
         this.texture = texture;
@@ -47,7 +47,7 @@ public class TextureFont extends Font {
     }
 
     @Override
-    public Optional<Glyph> getGlyphOptional(char character) {
+    public Optional<Glyph> getGlyph(char character) {
         return Optional.ofNullable(this.glyphs.get(character));
     }
 

@@ -7,7 +7,6 @@ import ua.mazik.delta.util.function.PentaFunction;
 import ua.mazik.delta.util.function.QuadFunction;
 import ua.mazik.delta.util.function.TriFunction;
 
-import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.BiFunction;

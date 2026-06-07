@@ -23,11 +23,7 @@ public abstract class Font implements AutoCloseable {
         this.overrides = overrides;
     }
 
-    public Glyph getGlyph(char character) {
-        return this.getGlyphOptional(character).orElse(Glyph.BROKEN);
-    }
-
-    public abstract Optional<Glyph> getGlyphOptional(char character);
+    public abstract Optional<Glyph> getGlyph(char character);
 
     @Override
     public abstract void close();
@@ -35,7 +31,7 @@ public abstract class Font implements AutoCloseable {
     public enum Condition implements StringIdentifiable {
         LANGUAGES(
             Codecs.STRING.list(),
-            list -> list.contains(Javarune.getCurrentLanguage()),
+            list -> list.contains(Javarune.SETTINGS.language.get()),
             list -> String.join("_", list)
         );
 

@@ -23,8 +23,8 @@ import static org.lwjgl.sdl.SDLEvents.*;
 import static org.lwjgl.sdl.SDLKeycode.*;
 
 public final class Javarune {
-    public static final DeltaFolder appData = DeltaFolder.appData("DeltaEngine", "Javarune").orElseThrow();
-    public static final JavaruneSettings settings = new JavaruneSettings(appData.file("settings.json"));
+    public static final DeltaFolder APP_DATA = DeltaFolder.appData("DeltaEngine", "Javarune").orElseThrow();
+    public static final JavaruneSettings SETTINGS = new JavaruneSettings(APP_DATA.file("settings.json"));
 
     public static final int WINDOW_WIDTH = 640;
     public static final int WINDOW_HEIGHT = 480;
@@ -109,7 +109,7 @@ public final class Javarune {
                 AtomicInteger x = new AtomicInteger();
 
                 for (char character : str.toCharArray()) {
-                    Glyph glyph = font.getGlyph(character);
+                    Glyph glyph = font.getGlyph(character).orElse(Glyph.BROKEN);
 
                     glyph.render(() -> atlasManager.getOrCreate("main", 2048, 2048), x.get(), texty);
                     x.addAndGet(glyph.width() + 1);
@@ -122,10 +122,6 @@ public final class Javarune {
         renderer.present();
 
         return true;
-    }
-
-    public static String getCurrentLanguage() {
-        return "bg_bg";
     }
 
     public static SDLRenderer renderer() {
@@ -171,7 +167,7 @@ public final class Javarune {
     }
 
     private static void quit() {
-        settings.write();
+        SETTINGS.write();
 
         window.close();
 
@@ -185,7 +181,7 @@ public final class Javarune {
     }
 
     public static void main(String[] args) {
-        settings.read();
+        SETTINGS.read();
 
         assetSource = new ClassAssetSource(Javarune.class);
 

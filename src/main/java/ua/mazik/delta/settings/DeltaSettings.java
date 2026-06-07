@@ -105,12 +105,14 @@ public class DeltaSettings {
      */
     public static final class Field<T> {
         public final Codec<T> codec;
+        public final T initialValue;
 
         private T value;
 
         private Field(Codec<T> codec, T value) {
             this.codec = codec;
             this.value = value;
+            this.initialValue = value;
         }
 
         /**
@@ -119,7 +121,9 @@ public class DeltaSettings {
          * @param element {@link JsonElement} which will be serialized.
          */
         public void set(JsonElement element) {
-            this.value = this.codec.decode(element);
+            T decoded = this.codec.decode(element);
+
+            this.value = decoded != null ? decoded : this.initialValue;
         }
 
         /**
@@ -128,20 +132,20 @@ public class DeltaSettings {
          * @param value New field value.
          */
         public void set(T value) {
-            this.value = value;
+            this.value = value != null ? value : this.initialValue;
         }
 
         /**
          * @return {@link Field} value wrapped in {@link Optional}. Can be empty.
          */
-        public Optional<T> get() {
+        public Optional<T> getSafe() {
             return Optional.ofNullable(this.value);
         }
 
         /**
          * @return {@link Field} value. Can be null.
          */
-        public T getNullable() {
+        public T get() {
             return this.value;
         }
 
@@ -149,7 +153,7 @@ public class DeltaSettings {
          * @return Encoded {@link JsonElement} wrapped in {@link Optional}. Can be empty.
          */
         public Optional<JsonElement> encode() {
-            return this.get().map(this.codec::encode);
+            return this.getSafe().map(this.codec::encode);
         }
     }
 }

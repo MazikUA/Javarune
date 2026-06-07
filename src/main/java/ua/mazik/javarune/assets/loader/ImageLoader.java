@@ -15,6 +15,7 @@ public class ImageLoader extends AssetLoader<SPNGImage> {
 
     @Override
     public Optional<SPNGImage> load(String path) {
+        System.out.println(path);
         Optional<Asset> asset = this.assetSource.getAsset("textures/" + path + ".png");
 
         if (asset.isPresent()) {

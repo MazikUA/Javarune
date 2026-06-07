@@ -2,11 +2,14 @@ package ua.mazik.delta.sdl.texture;
 
 import org.joml.Vector2i;
 import org.lwjgl.sdl.*;
+import org.lwjgl.system.MemoryStack;
 import ua.mazik.delta.sdl.renderer.SDLRenderer;
 import ua.mazik.delta.sdl.util.SDLUtil;
 import ua.mazik.delta.spng.SPNGImage;
 import ua.mazik.delta.util.LWJGLUtil;
 import ua.mazik.delta.util.PixelData;
+
+import java.nio.IntBuffer;
 
 import static org.lwjgl.sdl.SDLPixels.*;
 import static org.lwjgl.sdl.SDLRender.*;
@@ -68,6 +71,15 @@ public class SDLTexture implements AutoCloseable {
 
             SDLUtil.check(SDL_RenderTexture(this.renderer.address, this.sdlTexture, null, dstRect));
         });
+    }
+
+    public void drawQuad(SDLQuad quad) {
+        try (MemoryStack stack = MemoryStack.stackPush()) {
+            SDL_Vertex.Buffer buf = quad.buffer(stack);
+            IntBuffer indices = stack.ints(0, 1, 2, 0, 2, 3);
+
+            SDLUtil.check(SDL_RenderGeometry(this.renderer.address, this.sdlTexture, buf, indices));
+        }
     }
 
     public void update(int x, int y, int w, int h, PixelData pixels) {
