@@ -5,6 +5,7 @@ import ua.mazik.delta.util.Pixel;
 import ua.mazik.javarune.Javarune;
 import ua.mazik.javarune.text.font.Font;
 import ua.mazik.javarune.text.font.glyph.Glyph;
+import ua.mazik.javarune.text.font.glyph.GlyphRenderContext;
 
 import java.util.Optional;
 import java.util.function.Supplier;
@@ -35,10 +36,10 @@ public final class TextRenderer {
                     Pixel topColor = child.color == Pixel.WHITE ? Pixel.DARK_GRAY : child.color.withAlpha(COLORED_SHADOW_ALPHA);
                     Pixel bottomColor = child.color == Pixel.WHITE ? Pixel.NAVY : topColor;
 
-                    glyph.render(atlas, textX + 1, y + 1, scale, topColor, bottomColor);
+                    glyph.render(new GlyphRenderContext(atlas, textX + 1, y + 1, scale, topColor, bottomColor));
                 }
 
-                glyph.render(atlas, textX, y, scale, darkWorld ? Pixel.WHITE : child.color, child.color);
+                glyph.render(new GlyphRenderContext(atlas, textX, y, scale, darkWorld ? Pixel.WHITE : child.color, child.color));
 
                 textX += (glyph.width() + 1) * scale;
             }

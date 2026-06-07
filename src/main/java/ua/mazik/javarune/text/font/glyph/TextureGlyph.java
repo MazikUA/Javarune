@@ -2,16 +2,14 @@ package ua.mazik.javarune.text.font.glyph;
 
 import ua.mazik.delta.sdl.texture.SDLQuad;
 import ua.mazik.delta.sdl.texture.SDLTextureAtlas;
-import ua.mazik.delta.util.Pixel;
 import ua.mazik.javarune.text.font.TextureFont;
 
 import java.util.Optional;
-import java.util.function.Supplier;
 
 public record TextureGlyph(String regionName, TextureFont font, TextureFont.Rect rect) implements Glyph {
     @Override
-    public void render(Supplier<SDLTextureAtlas> atlas, int x, int y, int scale, Pixel topColor, Pixel bottomColor) {
-        SDLTextureAtlas gotAtlas = atlas.get();
+    public void render(GlyphRenderContext context) {
+        SDLTextureAtlas gotAtlas = context.atlas().get();
         Optional<SDLTextureAtlas.Region> region = gotAtlas.findRegion(this.regionName);
 
         if (region.isEmpty()) {
@@ -23,14 +21,14 @@ public record TextureGlyph(String regionName, TextureFont font, TextureFont.Rect
         region.ifPresent(value -> {
             SDLQuad quad = new SDLQuad();
 
-            quad.setPosition(x, y);
-            quad.setSize(value.w() * scale, value.h() * scale);
+            quad.setPosition(context.x(), context.y());
+            quad.setSize(value.w() * context.scale(), value.h() * context.scale());
 
-            quad.topLeft.color = topColor;
-            quad.topRight.color = topColor;
+            quad.topLeft.color = context.topColor();
+            quad.topRight.color = context.topColor();
 
-            quad.bottomRight.color = bottomColor;
-            quad.bottomLeft.color = bottomColor;
+            quad.bottomRight.color = context.bottomColor();
+            quad.bottomLeft.color = context.bottomColor();
 
             value.drawAsQuad(quad);
         });
