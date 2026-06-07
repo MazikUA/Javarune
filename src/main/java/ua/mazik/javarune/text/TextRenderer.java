@@ -40,7 +40,7 @@ public final class TextRenderer {
 
                 glyph.render(atlas, textX, y, scale, darkWorld ? Pixel.WHITE : child.color, child.color);
 
-                textX += (glyph.width() + 1) * 2;
+                textX += (glyph.width() + 1) * scale;
             }
         }
     }
