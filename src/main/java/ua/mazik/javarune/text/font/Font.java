@@ -1,11 +1,11 @@
-package ua.mazik.javarune.font;
+package ua.mazik.javarune.text.font;
 
 import ua.mazik.delta.codec.Codec;
 import ua.mazik.delta.codec.Codecs;
 import ua.mazik.delta.codec.ObjectCodec;
 import ua.mazik.delta.util.StringIdentifiable;
 import ua.mazik.javarune.Javarune;
-import ua.mazik.javarune.font.glyph.Glyph;
+import ua.mazik.javarune.text.font.glyph.Glyph;
 
 import java.util.Map;
 import java.util.Optional;

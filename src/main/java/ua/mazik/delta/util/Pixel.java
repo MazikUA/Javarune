@@ -16,11 +16,30 @@ import org.jspecify.annotations.NonNull;
  */
 @SuppressWarnings("MagicNumber")
 public record Pixel(int red, int green, int blue, int alpha) {
-    public static final Pixel BLACK = new Pixel(0, 0, 0, 255);
-    public static final Pixel RED = new Pixel(255, 0, 0, 255);
-    public static final Pixel BLUE = new Pixel(0, 0, 255, 255);
-    public static final Pixel YELLOW = new Pixel(255, 255, 0, 255);
-    public static final Pixel WHITE = new Pixel(255, 255, 255, 255);
+    public static final Pixel AQUA = Pixel.rgb(0x00FF00FF);
+    public static final Pixel BLACK = Pixel.rgb(0x000000);
+    public static final Pixel BLUE = Pixel.rgb(0x0000FF);
+    public static final Pixel DARK_GRAY = Pixel.rgb(0x404040);
+    public static final Pixel FUCHSIA = Pixel.rgb(0xFF00FF);
+    public static final Pixel GRAY = Pixel.rgb(0x808080);
+    public static final Pixel GREEN = Pixel.rgb(0x008000);
+    public static final Pixel LIME = Pixel.rgb(0x00FF00);
+    public static final Pixel LIGHT_GRAY = Pixel.rgb(0xC0C0C0);
+    public static final Pixel MAROON = Pixel.rgb(0x800000);
+    public static final Pixel NAVY = Pixel.rgb(0x000080);
+    public static final Pixel OLIVE = Pixel.rgb(0x008080);
+    public static final Pixel ORANGE = Pixel.rgb(0xFF8040);
+    public static final Pixel PURPLE = Pixel.rgb(0x800080);
+    public static final Pixel RED = Pixel.rgb(0xFF0000);
+    public static final Pixel SILVER = Pixel.rgb(0xC0C0C0);
+    public static final Pixel TEAL = Pixel.rgb(0x008080);
+    public static final Pixel WHITE = Pixel.rgb(0xFFFFFF);
+    public static final Pixel YELLOW = Pixel.rgb(0xFFFF00);
+
+    public static final Pixel UNNAMED_A = Pixel.rgb(0x00AEFF);
+    public static final Pixel UNNAMED_S = Pixel.rgb(0xFF80FF);
+    public static final Pixel UNNAMED_V = Pixel.rgb(0x80FF80);
+    public static final Pixel UNNAMED_I = Pixel.rgb(0x81C0FF);
 
     /**
      * Converts 32-bit RGBA to {@link Pixel}.
@@ -67,5 +86,9 @@ public record Pixel(int red, int green, int blue, int alpha) {
      */
     public int argb() {
         return (this.alpha << 24) | (this.red << 16) | (this.green << 8) | this.blue;
+    }
+
+    public Pixel withAlpha(int alpha) {
+        return new Pixel(this.red, this.green, this.blue, alpha);
     }
 }

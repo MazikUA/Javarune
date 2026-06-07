@@ -24,6 +24,10 @@ public class AtlasManager implements AutoCloseable {
         return this.atlases.computeIfAbsent(name, str -> new SDLTextureAtlas(width, height, this.renderer));
     }
 
+    public SDLTextureAtlas getOrCreate(String name, int size) {
+        return this.getOrCreate(name, size, size);
+    }
+
     @Override
     public void close() {
         this.atlases.values().forEach(SDLTextureAtlas::close);

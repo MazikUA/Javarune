@@ -4,7 +4,7 @@ import com.google.gson.JsonParser;
 import ua.mazik.delta.assets.Asset;
 import ua.mazik.delta.assets.AssetLoader;
 import ua.mazik.delta.assets.AssetSource;
-import ua.mazik.javarune.font.Font;
+import ua.mazik.javarune.text.font.Font;
 
 import java.nio.charset.StandardCharsets;
 import java.util.Optional;

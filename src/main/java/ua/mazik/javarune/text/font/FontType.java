@@ -1,4 +1,4 @@
-package ua.mazik.javarune.font;
+package ua.mazik.javarune.text.font;
 
 import ua.mazik.delta.codec.ObjectCodec;
 import ua.mazik.delta.util.StringIdentifiable;

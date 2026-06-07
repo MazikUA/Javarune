@@ -1,8 +1,8 @@
-package ua.mazik.javarune.font;
+package ua.mazik.javarune.text.font;
 
 import ua.mazik.delta.codec.Codecs;
 import ua.mazik.delta.codec.ObjectCodec;
-import ua.mazik.javarune.font.glyph.Glyph;
+import ua.mazik.javarune.text.font.glyph.Glyph;
 
 import java.util.Collections;
 import java.util.Comparator;

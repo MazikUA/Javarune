@@ -12,12 +12,12 @@ import ua.mazik.delta.util.Pixel;
 import ua.mazik.javarune.assets.loader.FontLoader;
 import ua.mazik.javarune.assets.loader.ImageLoader;
 import ua.mazik.javarune.assets.loader.TextureLoader;
-import ua.mazik.javarune.font.glyph.Glyph;
 import ua.mazik.javarune.settings.JavaruneSettings;
+import ua.mazik.javarune.text.LiteralText;
+import ua.mazik.javarune.text.TextRenderer;
 import ua.mazik.javarune.util.AtlasManager;
 
 import java.util.List;
-import java.util.concurrent.atomic.AtomicInteger;
 
 import static org.lwjgl.sdl.SDLEvents.*;
 import static org.lwjgl.sdl.SDLKeycode.*;
@@ -82,12 +82,6 @@ public final class Javarune {
         renderer.setDrawColor(Pixel.BLACK);
         renderer.clear();
 
-        renderer.setDrawColor(Pixel.RED);
-        renderer.drawFillRect(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
-
-        textureLoader.get("misc/asgore").ifPresent(asgore -> {
-            asgore.draw(x, y, 160, 160);
-        });
 
         List<String> strings = List.of(
             " !\"#$%&'()*+,-./",
@@ -102,22 +96,13 @@ public final class Javarune {
             "вгджзийклптцшщю"
         );
 
-        fontLoader.get("main").ifPresent(font -> {
-            int texty = 240;
+        int textY = 40;
 
-            for (String str : strings) {
-                AtomicInteger x = new AtomicInteger();
+        for (String str : strings) {
+            TextRenderer.renderText(new LiteralText(str).color(Pixel.UNNAMED_A), 30, textY);
 
-                for (char character : str.toCharArray()) {
-                    Glyph glyph = font.getGlyph(character).orElse(Glyph.BROKEN);
-
-                    glyph.render(() -> atlasManager.getOrCreate("main", 2048, 2048), x.get(), texty);
-                    x.addAndGet(glyph.width() + 1);
-                }
-
-                texty += 16;
-            }
-        });
+            textY += 40;
+        }
 
         renderer.present();
 
