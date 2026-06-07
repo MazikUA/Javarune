@@ -31,7 +31,7 @@ public final class TextRenderer {
             for (char character : content.toCharArray()) {
                 Glyph glyph = font.get().getGlyph(character).orElse(Glyph.BROKEN);
 
-                if (darkWorld && scale > 1) {
+                if (darkWorld) {
                     Pixel topColor = child.color == Pixel.WHITE ? Pixel.DARK_GRAY : child.color.withAlpha(COLORED_SHADOW_ALPHA);
                     Pixel bottomColor = child.color == Pixel.WHITE ? Pixel.NAVY : topColor;
 
