@@ -7,6 +7,7 @@ import ua.mazik.delta.util.StringIdentifiable;
 import ua.mazik.javarune.Javarune;
 import ua.mazik.javarune.text.font.glyph.Glyph;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -34,7 +35,8 @@ public abstract class Font {
             (required, actual) -> {
                 List<String> requiredList = cast(required);
                 List<String> actualList = cast(actual);
-                return requiredList.containsAll(actualList);
+
+                return !Collections.disjoint(requiredList, actualList);
             },
             list -> String.join("_", list),
             () -> List.of(Javarune.SETTINGS.language.get())
