@@ -16,10 +16,12 @@ import ua.mazik.javarune.assets.loader.TextureLoader;
 import ua.mazik.javarune.settings.JavaruneSettings;
 import ua.mazik.javarune.text.LiteralText;
 import ua.mazik.javarune.text.TextRenderer;
+import ua.mazik.javarune.text.font.Font;
 import ua.mazik.javarune.util.AtlasManager;
 import ua.mazik.javarune.util.LanguageManager;
 
 import java.util.List;
+import java.util.Map;
 
 import static org.lwjgl.sdl.SDLEvents.*;
 import static org.lwjgl.sdl.SDLKeycode.*;
@@ -108,8 +110,8 @@ public final class Javarune {
 
         textY = 40;
 
-        for (String str : languageManager.languageNames.values()) {
-            TextRenderer.renderText(new LiteralText(str), 300, textY);
+        for (Map.Entry<String, String> entry : languageManager.languageNames.entrySet()) {
+            TextRenderer.renderText(new LiteralText(entry.getValue()).overrides(Font.Condition.LANGUAGES, List.of(entry.getKey())), 300, textY);
 
             textY += 40;
         }

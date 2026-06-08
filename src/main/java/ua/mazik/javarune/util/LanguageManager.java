@@ -51,7 +51,13 @@ public class LanguageManager {
     }
 
     public Optional<String> get(String key) {
-        return Optional.ofNullable(this.lang.get(key));
+        String value = this.lang.get(key);
+
+        if (value == null) {
+            value = this.defaultLang.get(key);
+        }
+
+        return Optional.ofNullable(value);
     }
 
     private Map<String, String> loadLanguage(String langKey) {

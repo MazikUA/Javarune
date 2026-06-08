@@ -4,10 +4,7 @@ import ua.mazik.delta.codec.Codecs;
 import ua.mazik.delta.codec.ObjectCodec;
 import ua.mazik.javarune.text.font.glyph.Glyph;
 
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 public class ComposeFont extends Font {
     public final static ObjectCodec<ComposeFont> CODEC = Codecs.record(
@@ -27,11 +24,11 @@ public class ComposeFont extends Font {
     }
 
     @Override
-    public Optional<Glyph> getGlyph(char character) {
+    public Optional<Glyph> getGlyph(char character, Map<Condition, Object> overrides) {
         for (Font font : this.providers) {
-            if (!font.overrides.isFulfilled()) continue;
+            if (!font.overrides.isFulfilled(overrides)) continue;
 
-            Optional<Glyph> glyph = font.getGlyph(character);
+            Optional<Glyph> glyph = font.getGlyph(character, overrides);
 
             if (glyph.isPresent()) {
                 return glyph;

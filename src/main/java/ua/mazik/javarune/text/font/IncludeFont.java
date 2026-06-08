@@ -6,10 +6,7 @@ import ua.mazik.delta.codec.ObjectCodec;
 import ua.mazik.javarune.Javarune;
 import ua.mazik.javarune.text.font.glyph.Glyph;
 
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 public class IncludeFont extends Font {
     public static final ObjectCodec<IncludeFont> CODEC = Codecs.record(
@@ -28,11 +25,11 @@ public class IncludeFont extends Font {
     }
 
     @Override
-    public Optional<Glyph> getGlyph(char character) {
+    public Optional<Glyph> getGlyph(char character, Map<Condition, Object> overrides) {
         for (LoadableAsset<Font> font : this.fonts) {
-            if (!font.data().overrides.isFulfilled()) continue;
+            if (!font.data().overrides.isFulfilled(overrides)) continue;
 
-            Optional<Glyph> glyph = font.data().getGlyph(character);
+            Optional<Glyph> glyph = font.data().getGlyph(character, overrides);
 
             if (glyph.isPresent()) {
                 return glyph;
