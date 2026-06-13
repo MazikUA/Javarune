@@ -3,7 +3,9 @@ package ua.mazik.javarune.util;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import ua.mazik.delta.util.Pixel;
 import ua.mazik.javarune.Javarune;
+import ua.mazik.javarune.text.Text;
 
 import java.nio.charset.StandardCharsets;
 import java.util.*;
@@ -13,8 +15,8 @@ public class LanguageManager {
 
     public final Map<String, String> languageNames;
 
-    private final Map<String, String> defaultLang;
-    private Map<String, String> lang;
+    private final Map<String, Text> defaultLang;
+    private Map<String, Text> lang;
 
     public LanguageManager() {
         Map<String, String> map = new TreeMap<>();
@@ -40,6 +42,82 @@ public class LanguageManager {
         this.reloadLanguage();
     }
 
+    private static Text parse(String content) {
+        if (content.isEmpty()) return new Text(content);
+
+        Text root = null;
+
+        StringBuilder builder = new StringBuilder();
+        Pixel currentColor = Pixel.WHITE;
+
+        for (int i = 0; i < content.length(); i++) {
+            char character = content.charAt(i);
+
+            if (character == '\\' && i + 2 < content.length() && content.charAt(i + 1) == 'c') {
+                char code = content.charAt(i + 2);
+
+                Pixel color = switch (code) {
+                    case 'R' -> Pixel.RED;
+                    case 'B' -> Pixel.BLUE;
+                    case 'Y' -> Pixel.YELLOW;
+                    case 'G' -> Pixel.LIME;
+                    case 'W' -> Pixel.WHITE;
+                    case 'X' -> Pixel.BLACK;
+                    case 'P' -> Pixel.PURPLE;
+                    case 'M' -> Pixel.MAROON;
+                    case 'O' -> Pixel.ORANGE;
+                    case 'A' -> Pixel.AZURE;
+                    case 'S' -> Pixel.MAGENTA;
+                    case 'V' -> Pixel.VIRIDIAN;
+                    case 'I' -> Pixel.ICE;
+                    default -> null;
+                };
+
+                if (color == null) {
+                    builder.append("\\c").append(code);
+                    i += 2;
+
+                    continue;
+                }
+
+                if (!builder.isEmpty()) {
+                    Text text = new Text(builder.toString()).color(currentColor);
+
+                    if (root != null) {
+                        root.add(text);
+                    } else {
+                        root = text;
+                    }
+
+                    builder.setLength(0);
+                }
+
+                currentColor = color;
+
+                i += 2;
+                continue;
+            }
+
+            builder.append(character);
+        }
+
+        if (!builder.isEmpty()) {
+            Text text = new Text(builder.toString()).color(currentColor);
+
+            if (root != null) {
+                root.add(text);
+            } else {
+                root = text;
+            }
+        }
+
+        if (root == null) {
+            root = new Text("");
+        }
+
+        return root;
+    }
+
     public void reloadLanguage() {
         String langKey = Javarune.SETTINGS.language.get();
 
@@ -50,8 +128,8 @@ public class LanguageManager {
         }
     }
 
-    public Optional<String> get(String key) {
-        String value = this.lang.get(key);
+    public Optional<Text> get(String key) {
+        Text value = this.lang.get(key);
 
         if (value == null) {
             value = this.defaultLang.get(key);
@@ -60,15 +138,15 @@ public class LanguageManager {
         return Optional.ofNullable(value);
     }
 
-    private Map<String, String> loadLanguage(String langKey) {
-        Map<String, String> map = new HashMap<>();
+    private Map<String, Text> loadLanguage(String langKey) {
+        Map<String, Text> map = new HashMap<>();
 
         JsonElement json = Javarune.jsonLoader().get("lang/" + langKey).orElseThrow();
 
         if (!json.isJsonObject()) throw new IllegalArgumentException();
 
         for (Map.Entry<String, JsonElement> field : json.getAsJsonObject().entrySet()) {
-            map.put(field.getKey(), field.getValue().getAsString());
+            map.put(field.getKey(), parse(field.getValue().getAsString()));
         }
 
         return Collections.unmodifiableMap(map);

@@ -14,7 +14,7 @@ import ua.mazik.javarune.assets.loader.ImageLoader;
 import ua.mazik.javarune.assets.loader.JsonLoader;
 import ua.mazik.javarune.assets.loader.TextureLoader;
 import ua.mazik.javarune.settings.JavaruneSettings;
-import ua.mazik.javarune.text.LiteralText;
+import ua.mazik.javarune.text.Text;
 import ua.mazik.javarune.text.TextRenderer;
 import ua.mazik.javarune.text.font.Font;
 import ua.mazik.javarune.util.AtlasManager;
@@ -87,31 +87,10 @@ public final class Javarune {
         renderer.setDrawColor(Pixel.BLACK);
         renderer.clear();
 
-        List<String> strings = List.of(
-            " !\"#$%&'()*+,-./",
-            "0123456789:;<=>?",
-            "@ABCDEFGHIJKLMNO",
-            "PQRSTUVWXYZ[\\]^_",
-            "`abcdefghijklmno",
-            "pqrstuvwxyz{|}` ",
-            "тест бляха муха її ЇЇ",
-            "български език",
-            "ДЛФ",
-            "вгджзийклптцшщю"
-        );
-
         int textY = 40;
 
-        for (String str : strings) {
-            TextRenderer.renderText(new LiteralText(str).color(Pixel.UNNAMED_A), 30, textY);
-
-            textY += 40;
-        }
-
-        textY = 40;
-
         for (Map.Entry<String, String> entry : languageManager.languageNames.entrySet()) {
-            TextRenderer.renderText(new LiteralText(entry.getValue()).overrides(Font.Condition.LANGUAGES, List.of(entry.getKey())), 300, textY);
+            TextRenderer.render(new Text(entry.getValue()).overrides(Font.Condition.LANGUAGES, List.of(entry.getKey())), 300, textY);
 
             textY += 40;
         }

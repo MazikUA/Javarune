@@ -5,7 +5,6 @@ import ua.mazik.delta.sdl.texture.SDLTextureAtlas;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
 
 public class AtlasManager implements AutoCloseable {
     public final Map<String, SDLTextureAtlas> atlases;
@@ -14,10 +13,6 @@ public class AtlasManager implements AutoCloseable {
     public AtlasManager(SDLRenderer renderer) {
         this.atlases = new HashMap<>();
         this.renderer = renderer;
-    }
-
-    public Optional<SDLTextureAtlas> get(String name) {
-        return Optional.ofNullable(this.atlases.get(name));
     }
 
     public SDLTextureAtlas getOrCreate(String name, int width, int height) {

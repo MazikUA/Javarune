@@ -7,7 +7,7 @@ public interface Glyph {
         @Override
         public void render(GlyphRenderContext context) {
             Javarune.textureLoader().get("misc/asgore").ifPresent(asgore -> {
-                asgore.draw(context.x(), context.y(), 8, 16);
+                asgore.draw(context.x(), context.y(), 8 * context.scale(), 16 * context.scale());
             });
         }
 

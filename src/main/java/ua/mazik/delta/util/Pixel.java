@@ -16,6 +16,7 @@ import org.jspecify.annotations.NonNull;
  */
 @SuppressWarnings("MagicNumber")
 public record Pixel(int red, int green, int blue, int alpha) {
+    // GameMaker
     public static final Pixel AQUA = Pixel.rgb(0x00FF00FF);
     public static final Pixel BLACK = Pixel.rgb(0x000000);
     public static final Pixel BLUE = Pixel.rgb(0x0000FF);
@@ -36,10 +37,11 @@ public record Pixel(int red, int green, int blue, int alpha) {
     public static final Pixel WHITE = Pixel.rgb(0xFFFFFF);
     public static final Pixel YELLOW = Pixel.rgb(0xFFFF00);
 
-    public static final Pixel UNNAMED_A = Pixel.rgb(0x00AEFF);
-    public static final Pixel UNNAMED_S = Pixel.rgb(0xFF80FF);
-    public static final Pixel UNNAMED_V = Pixel.rgb(0x80FF80);
-    public static final Pixel UNNAMED_I = Pixel.rgb(0x81C0FF);
+    // Deltarune
+    public static final Pixel AZURE = Pixel.rgb(0x00AEFF);
+    public static final Pixel MAGENTA = Pixel.rgb(0xFF80FF); // toby... why «s» is magenta
+    public static final Pixel VIRIDIAN = Pixel.rgb(0x80FF80);
+    public static final Pixel ICE = Pixel.rgb(0x81C0FF);
 
     /**
      * Converts 32-bit RGBA to {@link Pixel}.
@@ -90,5 +92,9 @@ public record Pixel(int red, int green, int blue, int alpha) {
 
     public Pixel withAlpha(int alpha) {
         return new Pixel(this.red, this.green, this.blue, alpha);
+    }
+
+    public Pixel copy() {
+        return new Pixel(this.red, this.green, this.blue, this.alpha);
     }
 }

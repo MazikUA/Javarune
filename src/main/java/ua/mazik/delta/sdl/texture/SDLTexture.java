@@ -73,6 +73,14 @@ public class SDLTexture implements AutoCloseable {
         });
     }
 
+    public void draw(float x, float y, int scale) {
+        this.draw(x, y, this.sdlTexture.w() * scale, this.sdlTexture.h() * scale);
+    }
+
+    public void draw(float x, float y) {
+        this.draw(x, y, 1);
+    }
+
     public void drawQuad(SDLQuad quad) {
         try (MemoryStack stack = MemoryStack.stackPush()) {
             SDL_Vertex.Buffer buf = quad.buffer(stack);

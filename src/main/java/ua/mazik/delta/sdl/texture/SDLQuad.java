@@ -28,14 +28,14 @@ public class SDLQuad {
         this.x = x;
         this.y = y;
 
-        this.update();
+        this.updatePosition();
     }
 
     public void setSize(float w, float h) {
         this.w = w;
         this.h = h;
 
-        this.update();
+        this.updatePosition();
     }
 
     public void setTexCoord(float u, float v, float w, float h, float textureWidth, float textureHeight) {
@@ -62,7 +62,7 @@ public class SDLQuad {
         return buf;
     }
 
-    private void update() {
+    private void updatePosition() {
         this.topLeft.position.set(this.x, this.y);
         this.topRight.position.set(this.x + this.w, this.y);
         this.bottomRight.position.set(this.x + this.w, this.y + this.h);
