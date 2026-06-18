@@ -28,8 +28,12 @@ public class Text {
         this.font = "main";
     }
 
+    public static Text literal(String content) {
+        return new Text(content);
+    }
+
     public static Text translated(String key) {
-        return Javarune.languageManager().get(key).orElse(new Text(key));
+        return Javarune.languageManager().get(key).orElse(literal(key));
     }
 
     public Text add(Text text) {

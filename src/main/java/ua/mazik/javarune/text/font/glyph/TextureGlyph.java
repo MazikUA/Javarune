@@ -1,6 +1,7 @@
 package ua.mazik.javarune.text.font.glyph;
 
 import ua.mazik.delta.sdl.texture.SDLQuad;
+import ua.mazik.delta.sdl.texture.SDLTexture;
 import ua.mazik.delta.sdl.texture.SDLTextureAtlas;
 import ua.mazik.javarune.text.font.TextureFont;
 
@@ -21,7 +22,7 @@ public record TextureGlyph(String regionName, TextureFont font, TextureFont.Rect
         region.ifPresent(value -> {
             SDLQuad quad = new SDLQuad();
 
-            quad.setPosition(context.x(), context.y());
+            quad.setPosition(context.x() + SDLTexture.PIXEL_CRAWL_OFFSET, context.y() + SDLTexture.PIXEL_CRAWL_OFFSET);
             quad.setSize(value.w() * context.scale(), value.h() * context.scale());
 
             quad.topLeft.color = context.topColor();

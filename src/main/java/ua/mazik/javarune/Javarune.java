@@ -4,26 +4,22 @@ import org.lwjgl.sdl.*;
 import ua.mazik.delta.assets.AssetSource;
 import ua.mazik.delta.assets.source.ClassAssetSource;
 import ua.mazik.delta.fs.DeltaFolder;
+import ua.mazik.delta.sdl.audio.SDLAudioDevice;
 import ua.mazik.delta.sdl.renderer.SDLPresentationMode;
 import ua.mazik.delta.sdl.renderer.SDLRenderer;
 import ua.mazik.delta.sdl.util.SDLUtil;
 import ua.mazik.delta.sdl.window.SDLWindow;
 import ua.mazik.delta.util.Pixel;
-import ua.mazik.javarune.assets.loader.FontLoader;
-import ua.mazik.javarune.assets.loader.ImageLoader;
-import ua.mazik.javarune.assets.loader.JsonLoader;
-import ua.mazik.javarune.assets.loader.TextureLoader;
+import ua.mazik.javarune.assets.AssetHelper;
+import ua.mazik.javarune.assets.loader.*;
+import ua.mazik.javarune.screen.MainMenuScreen;
+import ua.mazik.javarune.screen.Screen;
 import ua.mazik.javarune.settings.JavaruneSettings;
-import ua.mazik.javarune.text.Text;
-import ua.mazik.javarune.text.TextRenderer;
-import ua.mazik.javarune.text.font.Font;
 import ua.mazik.javarune.util.AtlasManager;
 import ua.mazik.javarune.util.LanguageManager;
 
-import java.util.List;
-import java.util.Map;
-
 import static org.lwjgl.sdl.SDLEvents.*;
+import static org.lwjgl.sdl.SDLInit.*;
 import static org.lwjgl.sdl.SDLKeycode.*;
 
 public final class Javarune {
@@ -43,21 +39,27 @@ public final class Javarune {
 
     private static SDLWindow window;
     private static SDLRenderer renderer;
+    private static SDLAudioDevice audioDevice;
 
     private static AssetSource assetSource;
 
     private static FontLoader fontLoader;
     private static ImageLoader imageLoader;
     private static JsonLoader jsonLoader;
+    private static SoundLoader soundLoader;
     private static TextureLoader textureLoader;
 
     private static AtlasManager atlasManager;
     private static LanguageManager languageManager;
 
+    private static Screen screen;
+
     private Javarune() {
     }
 
     private static void init() {
+        SDLUtil.check(SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO));
+
         window = SDLWindow.builder()
             .title("Javarune")
             .size(WINDOW_WIDTH, WINDOW_HEIGHT)
@@ -72,13 +74,18 @@ public final class Javarune {
         renderer.setRenderScale(RENDER_SCALE, RENDER_SCALE);
         renderer.setRenderLogicalPresentation(LOGICAL_RENDER_WIDTH, LOGICAL_RENDER_HEIGHT, SDLPresentationMode.INTEGER_SCALE);
 
+        audioDevice = new SDLAudioDevice();
+
         fontLoader = new FontLoader(assetSource);
         imageLoader = new ImageLoader(assetSource);
         jsonLoader = new JsonLoader(assetSource);
+        soundLoader = new SoundLoader(assetSource);
         textureLoader = new TextureLoader(assetSource, renderer);
 
         atlasManager = new AtlasManager(renderer);
         languageManager = new LanguageManager();
+
+        screen = new MainMenuScreen();
 
         window.show();
     }
@@ -87,21 +94,24 @@ public final class Javarune {
         renderer.setDrawColor(Pixel.BLACK);
         renderer.clear();
 
-        int textY = 40;
-
-        for (Map.Entry<String, String> entry : languageManager.languageNames.entrySet()) {
-            TextRenderer.render(new Text(entry.getValue()).overrides(Font.Condition.LANGUAGES, List.of(entry.getKey())), 300, textY);
-
-            textY += 40;
+        if (screen != null) {
+            screen.render();
         }
 
         renderer.present();
+
+        audioDevice.update();
+        AssetHelper.playSound("menumove");
 
         return true;
     }
 
     public static SDLRenderer renderer() {
         return renderer;
+    }
+
+    public static SDLAudioDevice audioDevice() {
+        return audioDevice;
     }
 
     public static AssetSource assetSource() {
@@ -118,6 +128,10 @@ public final class Javarune {
 
     public static JsonLoader jsonLoader() {
         return jsonLoader;
+    }
+
+    public static SoundLoader soundLoader() {
+        return soundLoader;
     }
 
     public static TextureLoader textureLoader() {
@@ -138,12 +152,16 @@ public final class Javarune {
                 return false;
             }
             case SDL_EVENT_KEY_DOWN -> {
-                switch (event.key().key()) {
-                    case SDLK_F4 -> window.toggleFullscreen();
-                    case SDLK_E -> {
-                        SETTINGS.language.set("bg_bg");
-                        languageManager.reloadLanguage();
-                    }
+                if (event.key().key() == SDLK_F4 && !event.key().repeat()) {
+                    window.toggleFullscreen();
+                }
+                if (screen != null) {
+                    screen.onKeyDown(event.key().key(), event.key().repeat());
+                }
+            }
+            case SDL_EVENT_KEY_UP -> {
+                if (screen != null) {
+                    screen.onKeyUp(event.key().key(), event.key().repeat());
                 }
             }
         }
@@ -153,13 +171,16 @@ public final class Javarune {
     private static void quit() {
         SETTINGS.write();
 
+        audioDevice.close();
+
         window.close();
 
         atlasManager.close();
 
-        fontLoader.close();
-        imageLoader.close();
         textureLoader.close();
+        soundLoader.close();
+        imageLoader.close();
+        fontLoader.close();
 
         renderer.close();
     }

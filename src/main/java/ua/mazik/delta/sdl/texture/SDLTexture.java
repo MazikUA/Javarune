@@ -16,7 +16,7 @@ import static org.lwjgl.sdl.SDLRender.*;
 import static org.lwjgl.sdl.SDLSurface.*;
 
 public class SDLTexture implements AutoCloseable {
-    private static final float PIXEL_CRAWL_OFFSET = -0.01f;
+    public static final float PIXEL_CRAWL_OFFSET = -0.01f;
 
     public final SDL_Texture sdlTexture;
     public final SDLRenderer renderer;
