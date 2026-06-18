@@ -101,7 +101,6 @@ public final class Javarune {
         renderer.present();
 
         audioDevice.update();
-        AssetHelper.playSound("menumove");
 
         return true;
     }

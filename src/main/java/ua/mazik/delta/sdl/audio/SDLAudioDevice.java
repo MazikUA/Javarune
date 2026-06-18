@@ -38,8 +38,6 @@ public class SDLAudioDevice implements AutoCloseable {
         while (iterator.hasNext()) {
             long stream = iterator.next();
 
-            System.out.println(SDL_GetAudioStreamQueued(stream));
-
             if (SDL_GetAudioStreamQueued(stream) == 0) {
                 SDL_UnbindAudioStream(stream);
                 SDL_DestroyAudioStream(stream);
