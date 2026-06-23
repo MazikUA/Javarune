@@ -11,7 +11,7 @@ import ua.mazik.delta.sdl.util.SDLUtil;
 import ua.mazik.delta.sdl.window.SDLWindow;
 import ua.mazik.delta.util.Pixel;
 import ua.mazik.javarune.assets.loader.*;
-import ua.mazik.javarune.locale.LocaleManager;
+import ua.mazik.javarune.language.LanguageManager;
 import ua.mazik.javarune.screen.MainMenuScreen;
 import ua.mazik.javarune.screen.Screen;
 import ua.mazik.javarune.settings.JavaruneSettings;
@@ -50,7 +50,7 @@ public final class Javarune {
     private static TextureLoader textureLoader;
 
     private static AtlasManager atlasManager;
-    private static LocaleManager localeManager;
+    private static LanguageManager languageManager;
 
     private static Screen screen;
 
@@ -83,7 +83,7 @@ public final class Javarune {
         textureLoader = new TextureLoader(assetSource, renderer);
 
         atlasManager = new AtlasManager(renderer);
-        localeManager = new LocaleManager();
+        languageManager = new LanguageManager();
 
         screen = new MainMenuScreen();
 
@@ -140,8 +140,8 @@ public final class Javarune {
         return atlasManager;
     }
 
-    public static LocaleManager localeManager() {
-        return localeManager;
+    public static LanguageManager languageManager() {
+        return languageManager;
     }
 
     private static boolean event(SDL_Event event) {

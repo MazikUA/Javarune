@@ -33,7 +33,7 @@ public class Text {
     }
 
     public static Text translated(String key) {
-        return Javarune.localeManager().get(key).orElse(literal(key));
+        return Javarune.languageManager().get(key).orElse(literal(key));
     }
 
     public Text add(Text text) {

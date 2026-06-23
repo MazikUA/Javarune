@@ -1,4 +1,4 @@
-package ua.mazik.javarune.locale;
+package ua.mazik.javarune.language;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-public class Locale {
+public class Language {
     public final String key;
     public final String name;
     public final int progress;
@@ -21,11 +21,11 @@ public class Locale {
     private final Asset asset;
     private final Map<String, Text> fields;
 
-    public Locale(Asset asset) {
+    public Language(Asset asset) {
         JsonObject obj = getJsonObject(asset);
 
         this.key = asset.fileName();
-        this.name = obj.get("locale.name").getAsString();
+        this.name = obj.get("lang.name").getAsString();
         // TODO: implement
         this.progress = 0;
 
@@ -136,6 +136,6 @@ public class Locale {
     }
 
     public Text nameText() {
-        return Text.literal(this.name).overrides(Font.Condition.LOCALES, List.of(this.key));
+        return Text.literal(this.name).overrides(Font.Condition.LANGUAGES, List.of(this.key));
     }
 }

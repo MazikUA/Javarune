@@ -1,7 +1,7 @@
 package ua.mazik.javarune.screen;
 
 import ua.mazik.javarune.Javarune;
-import ua.mazik.javarune.locale.Locale;
+import ua.mazik.javarune.language.Language;
 import ua.mazik.javarune.screen.element.OptionList;
 
 import java.util.ArrayList;
@@ -14,8 +14,8 @@ public class MainMenuScreen extends Screen {
     public MainMenuScreen() {
         List<OptionList.Option> options2 = new ArrayList<>();
 
-        for (Locale locale : Javarune.localeManager().availableLocales.values()) {
-            options2.add(new OptionList.Option(locale.nameText(), () -> {
+        for (Language language : Javarune.languageManager().availableLanguages.values()) {
+            options2.add(new OptionList.Option(language.nameText(), () -> {
                 this.list.focus();
             }));
         }
@@ -24,8 +24,8 @@ public class MainMenuScreen extends Screen {
 
         List<OptionList.Option> options = new ArrayList<>();
 
-        for (Locale locale : Javarune.localeManager().availableLocales.values()) {
-            options.add(new OptionList.Option(locale.nameText(), this.list2::focus));
+        for (Language language : Javarune.languageManager().availableLanguages.values()) {
+            options.add(new OptionList.Option(language.nameText(), this.list2::focus));
         }
 
         this.list = new OptionList(40, 100, this, options, 16, true);

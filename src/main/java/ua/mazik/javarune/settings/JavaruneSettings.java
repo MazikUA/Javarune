@@ -9,7 +9,7 @@ import ua.mazik.delta.util.StringIdentifiable;
 import java.util.function.Function;
 
 public class JavaruneSettings extends DeltaSettings {
-    public final DeltaSettings.Field<String> locale = this.addField("locale", Codecs.STRING, "en_us");
+    public final DeltaSettings.Field<String> language = this.addField("language", Codecs.STRING, "en_us");
     public final DeltaSettings.Field<GlyphWidth> dialogGlyphWidth = this.addField("glyph_width", GlyphWidth.CODEC, GlyphWidth.DYNAMIC);
 
     public JavaruneSettings(DeltaFile file) {
