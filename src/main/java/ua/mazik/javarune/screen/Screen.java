@@ -8,8 +8,14 @@ public abstract class Screen implements Renderable {
     public FocusableElement focusedElement;
 
     public void onKeyDown(int keycode, boolean repeat) {
+        if (this.focusedElement != null) {
+            this.focusedElement.onKeyDown(keycode, repeat);
+        }
     }
 
     public void onKeyUp(int keycode, boolean repeat) {
+        if (this.focusedElement != null) {
+            this.focusedElement.onKeyUp(keycode, repeat);
+        }
     }
 }

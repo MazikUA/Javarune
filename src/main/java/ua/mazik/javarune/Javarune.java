@@ -10,15 +10,15 @@ import ua.mazik.delta.sdl.renderer.SDLRenderer;
 import ua.mazik.delta.sdl.util.SDLUtil;
 import ua.mazik.delta.sdl.window.SDLWindow;
 import ua.mazik.delta.util.Pixel;
-import ua.mazik.javarune.assets.AssetHelper;
 import ua.mazik.javarune.assets.loader.*;
+import ua.mazik.javarune.locale.LocaleManager;
 import ua.mazik.javarune.screen.MainMenuScreen;
 import ua.mazik.javarune.screen.Screen;
 import ua.mazik.javarune.settings.JavaruneSettings;
 import ua.mazik.javarune.util.AtlasManager;
-import ua.mazik.javarune.util.LanguageManager;
 
 import static org.lwjgl.sdl.SDLEvents.*;
+import static org.lwjgl.sdl.SDLHints.*;
 import static org.lwjgl.sdl.SDLInit.*;
 import static org.lwjgl.sdl.SDLKeycode.*;
 
@@ -50,7 +50,7 @@ public final class Javarune {
     private static TextureLoader textureLoader;
 
     private static AtlasManager atlasManager;
-    private static LanguageManager languageManager;
+    private static LocaleManager localeManager;
 
     private static Screen screen;
 
@@ -59,6 +59,7 @@ public final class Javarune {
 
     private static void init() {
         SDLUtil.check(SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO));
+        SDLUtil.check(SDL_SetHint(SDL_HINT_MAIN_CALLBACK_RATE, "30"));
 
         window = SDLWindow.builder()
             .title("Javarune")
@@ -70,7 +71,6 @@ public final class Javarune {
 
         renderer = new SDLRenderer(window, SDLUtil.getDefaultDriver());
 
-        renderer.useVsync();
         renderer.setRenderScale(RENDER_SCALE, RENDER_SCALE);
         renderer.setRenderLogicalPresentation(LOGICAL_RENDER_WIDTH, LOGICAL_RENDER_HEIGHT, SDLPresentationMode.INTEGER_SCALE);
 
@@ -83,7 +83,7 @@ public final class Javarune {
         textureLoader = new TextureLoader(assetSource, renderer);
 
         atlasManager = new AtlasManager(renderer);
-        languageManager = new LanguageManager();
+        localeManager = new LocaleManager();
 
         screen = new MainMenuScreen();
 
@@ -97,10 +97,9 @@ public final class Javarune {
         if (screen != null) {
             screen.render();
         }
-
         renderer.present();
 
-        audioDevice.update();
+        audioDevice.check();
 
         return true;
     }
@@ -141,8 +140,8 @@ public final class Javarune {
         return atlasManager;
     }
 
-    public static LanguageManager languageManager() {
-        return languageManager;
+    public static LocaleManager localeManager() {
+        return localeManager;
     }
 
     private static boolean event(SDL_Event event) {

@@ -25,7 +25,7 @@
     "overrides": {
         "priority": 100,
         "conditions": {
-            "languages": [ "bg_bg" ]
+            "locales": [ "bg_bg" ]
         }
     }
 }

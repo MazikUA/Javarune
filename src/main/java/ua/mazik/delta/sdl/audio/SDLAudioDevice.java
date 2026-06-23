@@ -32,7 +32,7 @@ public class SDLAudioDevice implements AutoCloseable {
         this.activeStreams.add(stream);
     }
 
-    public void update() {
+    public void check() {
         Iterator<Long> iterator = this.activeStreams.iterator();
 
         while (iterator.hasNext()) {

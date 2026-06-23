@@ -33,7 +33,7 @@ public class Text {
     }
 
     public static Text translated(String key) {
-        return Javarune.languageManager().get(key).orElse(literal(key));
+        return Javarune.localeManager().get(key).orElse(literal(key));
     }
 
     public Text add(Text text) {
@@ -69,7 +69,7 @@ public class Text {
     }
 
     public Text copy() {
-        Text text = new Text(this.content);
+        Text text = Text.literal(this.content);
 
         for (Text child : this.children) {
             text.children.add(child.copy());

@@ -30,7 +30,7 @@ public abstract class Font {
     public abstract Optional<Glyph> getGlyph(char character, Map<Condition, Object> overrides);
 
     public enum Condition implements StringIdentifiable {
-        LANGUAGES(
+        LOCALES(
             Codecs.STRING.list(),
             (required, actual) -> {
                 List<String> requiredList = cast(required);
@@ -39,7 +39,7 @@ public abstract class Font {
                 return !Collections.disjoint(requiredList, actualList);
             },
             list -> String.join("_", list),
-            () -> List.of(Javarune.SETTINGS.language.get())
+            () -> List.of(Javarune.SETTINGS.locale.get())
         );
 
         public static final Codec<Condition> CODEC = StringIdentifiable.createCodec(Condition::values);

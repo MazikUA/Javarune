@@ -14,4 +14,10 @@ public abstract class FocusableElement extends Element {
     public boolean isFocused() {
         return this.screen.focusedElement == this;
     }
+
+    public void onKeyDown(int keycode, boolean repeat) {
+    }
+
+    public void onKeyUp(int keycode, boolean repeat) {
+    }
 }
